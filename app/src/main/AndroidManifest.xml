@@ -3,6 +3,7 @@
     package="com.info3604.streetfoodtracker">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -22,6 +23,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".ui.user.registrationActivity" />
+        <activity android:name=".ui.user.signInActivity"
+        android:theme="@style/Theme.StreetFoodTracker.NoActionBar">
+
+        </activity>
+
     </application>
 
 </manifest>

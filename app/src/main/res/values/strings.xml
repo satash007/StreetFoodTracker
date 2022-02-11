@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StreetFoodTracker</string>
+    <string name="app_name">Street Food Tracker</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -11,10 +11,13 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
 
-    <string name="email_id">email id</string>
-    <string name="password">password</string>
+    <string name="email_id">Email</string>
+    <string name="password">Password</string>
     <string name="login">Login</string>
+    <string name="logout">Logout</string>
     <string name="failed">Authentication failed</string>
     <string name="image">image</string>
-    <string name="create_a_new_account">Create a new Account!</string>
+    <string name="createAccount">Don\'t have an account? Sign Up!</string>
+    <string name="google_client_id">329274700478-7rr97hps37v5sg5tan72cn793fuho59k.apps.googleusercontent.com</string>
+
 </resources>
