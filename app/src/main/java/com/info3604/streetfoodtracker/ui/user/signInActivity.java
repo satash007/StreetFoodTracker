@@ -27,9 +27,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.info3604.streetfoodtracker.MainActivity;
 import com.info3604.streetfoodtracker.R;
 
-public class signin extends AppCompatActivity {
+public class signInActivity extends AppCompatActivity {
     private static final String TAG = "";
     private EditText inputEmail, inputPassword;
     private FirebaseAuth mAuth;
@@ -52,8 +53,9 @@ public class signin extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         //check the current user
         if (mAuth.getCurrentUser() != null) {
-            //startActivity(new Intent(signin.this, Home_screen.class));
-            //finish();
+            startActivity(new Intent(signInActivity.this, MainActivity.class));
+
+            finish();
         }
         setContentView(R.layout.sigin_activity);
 
@@ -67,14 +69,14 @@ public class signin extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signIn();
+                    signIn();
             }
         });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(signin.this, singup_activity.class));
+                startActivity(new Intent(signInActivity.this, registrationActivity.class));
             }
         });
 
@@ -101,7 +103,7 @@ public class signin extends AppCompatActivity {
 
                 //authenticate user
                 mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(signin.this, new OnCompleteListener<AuthResult>() {
+                        .addOnCompleteListener(signInActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
 
@@ -110,13 +112,13 @@ public class signin extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     // there was an error
                                     Log.d(TAG, "signInWithEmail:success");
-                                    //Intent intent = new Intent(signin.this, Home_screen.class);
-                                    //startActivity(intent);
+                                    Intent intent = new Intent(signInActivity.this, MainActivity.class);
+                                    startActivity(intent);
                                     finish();
 
                                 } else {
                                     Log.d(TAG, "singInWithEmail:Fail");
-                                    Toast.makeText(signin.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(signInActivity.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
                                 }
                             }
 
@@ -130,14 +132,15 @@ public class signin extends AppCompatActivity {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser() != null) {
-                    //startActivity(new Intent(signin.this, Home_screen.class));
+                    startActivity(new Intent(signInActivity.this, MainActivity.class));
+                    finish();
                 }
 
             }
         };
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(getString(R.string.google_client_id))
                 .requestEmail()
                 .build();
 
@@ -183,10 +186,12 @@ public class signin extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             //updateUI(user);
+                            //Toast.makeText(getApplicationContext(), " Starting activity", Toast.LENGTH_SHORT).show();
+
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(signin.this, "Aut Fail", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(signInActivity.this, "Aut Fail", Toast.LENGTH_SHORT).show();
                             //updateUI(null);
                         }
 

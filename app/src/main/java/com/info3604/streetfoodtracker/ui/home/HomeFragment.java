@@ -3,10 +3,14 @@ package com.info3604.streetfoodtracker.ui.home;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.databinding.FragmentHomeBinding;
+import com.info3604.streetfoodtracker.ui.user.signInActivity;
 
 public class HomeFragment extends Fragment {
     FragmentActivity act;
@@ -31,6 +36,12 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListner);
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -49,7 +60,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        Button button = (Button) root.findViewById(R.id.signout);
+        //Button button = (Button) root.findViewById(R.id.signout);
         mAuth = FirebaseAuth.getInstance();
 
         mAuthListner = new FirebaseAuth.AuthStateListener() {
@@ -57,19 +68,12 @@ public class HomeFragment extends Fragment {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 if (firebaseAuth.getCurrentUser()==null)
                 {
-                    //startActivity(new Intent(HomeFragment.this, singin_activity.class));
+                    startActivity(new Intent(getActivity(), signInActivity.class));
                 }
             }
         };
 
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
 
-
-            }
-        });
 
         return root;
     }
@@ -79,4 +83,32 @@ public class HomeFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:  {
+                // navigate to settings screen
+                Toast.makeText(getActivity(), "Settings", Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+            case R.id.action_logout: {
+                mAuth.signOut();
+                Toast.makeText(getActivity(), "Logged Out", Toast.LENGTH_SHORT).show();
+
+                return true;
+            }
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
 }

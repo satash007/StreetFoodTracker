@@ -14,6 +14,17 @@
       },
       "oauth_client": [
         {
+<<<<<<< HEAD
+=======
+          "client_id": "329274700478-qm19hicl289k4v0p6nt1e83ocsfcdpht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.info3604.streetfoodtracker",
+            "certificate_hash": "eab2bd86889607cf5bdcd74c4543bda6afe69510"
+          }
+        },
+        {
+>>>>>>> origin/master
           "client_id": "329274700478-7rr97hps37v5sg5tan72cn793fuho59k.apps.googleusercontent.com",
           "client_type": 3
         }
