@@ -8,7 +8,8 @@ android {
 
     defaultConfig {
         applicationId "com.info3604.streetfoodtracker"
-        minSdk 16
+        //minSdk 16
+        minSdk 19
         targetSdk 31
         versionCode 1
         versionName "1.0"
@@ -18,7 +19,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,9 +48,31 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
-    //Firebase database
 
     //fixes multidex issue
     implementation 'com.android.support:multidex:1.0.3'
+
+    //added Picasso for image handling
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
+    /*Legacy Maps SDK*/
+    //implementation 'com.google.android.gms:play-services-maps:16.1.0'
+    //implementation 'com.google.android.gms:play-services-location:15.0.1'
+
+    /*New Maps SDK that features improved renderer*/
+    implementation 'com.google.android.gms:play-services-maps:18.0.2'
+    implementation 'com.google.android.gms:play-services-location:19.0.1'
+
+
+    implementation 'com.karumi:dexter:5.0.0'
+    implementation 'com.google.code.gson:gson:2.7'
+    implementation 'com.squareup.retrofit2:retrofit:2.1.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.4.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.4.1'
+    implementation 'io.nlopez.smartlocation:library:3.3.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
+
 
 }

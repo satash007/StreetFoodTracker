@@ -20,4 +20,7 @@
     <string name="createAccount">Don\'t have an account? Sign Up!</string>
     <string name="google_client_id">329274700478-7rr97hps37v5sg5tan72cn793fuho59k.apps.googleusercontent.com</string>
 
+    <string name="error_api">Error fetching nearby restaurants.</string>
+    <string name="google_maps_key">AIzaSyD2M6ScR1iUb9DIlLOmt82c_K-803WjR8g</string>
+
 </resources>

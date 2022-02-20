@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    tools:context="com.info3604.streetfoodtracker.ui.home.HomeFragment">
+
+    <fragment
+        android:id="@+id/map"
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        >
+    </fragment>
+
+    <RelativeLayout
+        android:id="@+id/searchLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/btnSearch"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="59dp"
+            android:layout_marginRight="59dp"
+            android:layout_alignParentRight="true"
+            android:drawableLeft="@drawable/ic_search"/>
+
+        <Button
+            android:id="@+id/btnViewVendors"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawableLeft="@drawable/ic_person_pin"
+            android:paddingRight="20dp" />
+
+        <EditText
+            android:id="@+id/editText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:hint="Search for a vendor..."
+            android:text="Doubles"
+            android:textColor="@android:color/black"
+            android:textColorHint="@android:color/black" />
+
+
+    </RelativeLayout>
+
+</FrameLayout>

@@ -151,8 +151,12 @@ public class signInActivity extends AppCompatActivity {
 
 
     private void signIn() {
+        // clearing previous signin caches
+        mGoogleSignInClient.signOut();
+
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+
     }
 
     @Override
