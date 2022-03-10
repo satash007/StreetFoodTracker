@@ -57,7 +57,8 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             holder.txtStoreDist.setText("Rating: " + model.rating);
             holder.txtStoreName.setText(info.name);
             holder.txtStoreAddr.setText(info.vicinity);
-        }
+
+            }
     }
 }
 

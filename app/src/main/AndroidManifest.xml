@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.info3604.streetfoodtracker">
 
     <!--
@@ -13,6 +14,10 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-feature android:name="android.hardware.location.network" android:required="false" />
+    <uses-feature android:name="android.hardware.location.gps" android:required="false"  />
+
+    <uses-sdk tools:overrideLibrary="com.adevinta.leku"/>
 
     <application
         android:allowBackup="true"
@@ -27,7 +32,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".SignInActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.StreetFoodTracker.NoActionBar">
@@ -38,8 +43,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.user.registrationActivity" />
-        <activity android:name=".ui.user.signInActivity"
+        <activity android:name=".RegistrationActivity" />
+        <activity android:name=".MainActivity"
         android:theme="@style/Theme.StreetFoodTracker.NoActionBar">
 
         </activity>
@@ -47,8 +52,34 @@
         <activity
             android:name=".VendorList"
             android:label="@string/app_name"
+            android:theme="@style/Theme.StreetFoodTracker"
             android:exported="false"></activity>
 
+        <activity
+            android:name=".DisplayVendorProfileActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.StreetFoodTracker"
+            android:exported="false"></activity>
+
+        <activity
+            android:name="com.adevinta.leku.LocationPickerActivity"
+            android:label="@string/leku_title_activity_location_picker"
+            android:theme="@style/LevionAppTheme.Dark"
+            android:windowSoftInputMode="adjustPan"
+            android:parentActivityName=".RegistrationActivity"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+                android:resource="@xml/leku_searchable" />
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".RegistrationActivity" />
+        </activity>
+
     </application>
+
+
 
 </manifest>

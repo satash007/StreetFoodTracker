@@ -144,7 +144,7 @@
                 android:layout_marginStart="15dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="15dp"
-                android:text="Name of Vendor"
+                android:text="Name of Vendor:"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -166,9 +166,8 @@
                 android:id="@+id/vendor_location"
                 android:layout_width="325dp"
                 android:layout_height="27dp"
-                android:layout_marginStart="5dp"
-                android:layout_marginLeft="5dp"
                 android:layout_marginTop="18dp"
+                android:gravity="left"
                 android:hint="Location"
                 app:layout_constraintEnd_toEndOf="@+id/vendor_name"
                 app:layout_constraintStart_toStartOf="@+id/textView4"
@@ -183,7 +182,6 @@
                 android:layout_marginEnd="198dp"
                 android:layout_marginRight="198dp"
                 android:text="Contact Information"
-                app:layout_constraintEnd_toEndOf="@+id/vendor_location"
                 app:layout_constraintStart_toStartOf="@+id/vendor_location"
                 app:layout_constraintTop_toBottomOf="@+id/vendor_location" />
 
@@ -260,7 +258,7 @@
                 app:layout_constraintStart_toStartOf="@+id/textView7"
                 app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-            <!-- User can input a star rating for the vendor and click the submit button
+            <!-- User can input a star rating for the vendor and click the submit btnChooseLoc
                  to submit the result -->
             <RatingBar
                 android:id="@+id/rating_from_user"
