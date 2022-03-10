@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "329274700478",
+    "project_id": "streetfoodtracker-acd3f",
+    "storage_bucket": "streetfoodtracker-acd3f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:329274700478:android:c625ffa8671a4d8829a4ef",
+        "android_client_info": {
+          "package_name": "com.info3604.streetfoodtracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "329274700478-qm19hicl289k4v0p6nt1e83ocsfcdpht.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.info3604.streetfoodtracker",
+            "certificate_hash": "eab2bd86889607cf5bdcd74c4543bda6afe69510"
+          }
+        },
+        {
+          "client_id": "329274700478-7rr97hps37v5sg5tan72cn793fuho59k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsPd01DDlFxwt7-OTUzwma_vc7fMjbvVo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "329274700478-7rr97hps37v5sg5tan72cn793fuho59k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">StreetFoodTracker</string>
+    <string name="app_name">Street Food Tracker</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Android Studio</string>
@@ -10,4 +10,28 @@
     <string name="menu_home">Home</string>
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
+
+    <string name="email_id">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="failed">Authentication failed</string>
+    <string name="image">image</string>
+    <string name="createAccount">Don\'t have an account? Register!</string>
+    <string name="google_client_id">329274700478-7rr97hps37v5sg5tan72cn793fuho59k.apps.googleusercontent.com</string>
+
+    <string name="error_api">Error fetching nearby restaurants.</string>
+    <string name="google_maps_key">AIzaSyD2M6ScR1iUb9DIlLOmt82c_K-803WjR8g</string>
+
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_email">Invalid, accepted email format is digits@digits.digits</string>
+    <string name="error_email_not_in_use">No account associated with this email, please use register link</string>
+    <string name="duplicate_email">Invalid, email already in use</string>
+    <string name="error_invalid_password">Invalid, password must be greater than 6 characters and contain upper, lower and numeric characters</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_wrong_password">Password does not match email</string>
+
+    <string name="version_code">App Version: 2.0</string>
+
+
 </resources>
