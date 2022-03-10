@@ -2,9 +2,6 @@ package com.info3604.streetfoodtracker;
 
 import android.os.Bundle;
 
-import android.widget.Button;
-import android.widget.EditText;
-
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,7 +17,7 @@ public class VendorList extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cafes);
+        setContentView(R.layout.activity_vendor_list);
 
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         recyclerView.setNestedScrollingEnabled(false);
