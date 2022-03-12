@@ -400,6 +400,7 @@ public class RegistrationActivity extends AppCompatActivity {
                 //Toast.makeText(RegistrationActivity.this, "Registered Successfully!", Toast.LENGTH_SHORT).show();
             }
 
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // if the data is not added or it is cancelled then
