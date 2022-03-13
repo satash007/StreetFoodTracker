@@ -240,8 +240,6 @@ public class RegistrationActivity extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
 
-
-
         // Variables for validation of inputted data
         boolean cancel = false;
         View focusView = null;
@@ -304,6 +302,8 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
     }
+
+
 
 
 
