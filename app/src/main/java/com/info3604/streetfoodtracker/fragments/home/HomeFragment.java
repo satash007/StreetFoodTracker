@@ -29,13 +29,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
+//import com.daimajia.androidanimations.library.Techniques;
+//import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -51,6 +53,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.info3604.streetfoodtracker.PlacesPOJO;
 import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.SearchData;
@@ -60,6 +67,7 @@ import com.info3604.streetfoodtracker.DisplayVendorProfileActivity;
 import com.info3604.streetfoodtracker.API.APIClient;
 import com.info3604.streetfoodtracker.API.ApiInterface;
 import com.info3604.streetfoodtracker.SignInActivity;
+
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -68,6 +76,7 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
@@ -110,6 +119,14 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     FloatingActionButton fab;
     View root;
+
+    FirebaseDatabase firebaseDatabase;
+
+    // creating a variable for our Database
+    // Reference for Firebase.
+    DatabaseReference databaseReference;
+    SupportMapFragment mapFragment;
+
     @Override
     public void onStart() {
         super.onStart();
@@ -119,6 +136,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+
     }
 
 
@@ -126,7 +144,31 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+
+        apiService = APIClient.getClient().create(ApiInterface.class);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuthListener = firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser()==null)
+            {
+                getActivity().finish();
+            }
+
+        };
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        // below line is used to get reference for our database.
+        databaseReference = firebaseDatabase.getReference().child("Userbase").getRef();
+
+        mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+
+        setupMap();
     }
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -148,55 +190,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         root = inflater.inflate(R.layout.activity_maps, container, false);
 
-
-
-        apiService = APIClient.getClient().create(ApiInterface.class);
         editText = (EditText) root.findViewById(R.id.editText);
         btnSearch = (Button) root.findViewById(R.id.btnSearch);
         btnViewVendors = (Button) root.findViewById(R.id.btnViewVendors);
 
         fab = (FloatingActionButton) root.findViewById(R.id.fab);
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                .findFragmentById(R.id.map);
-        if (requestSinglePermission()) {
-            if (mapFragment == null) {
-                mapFragment = SupportMapFragment.newInstance();
 
-                mapFragment.getMapAsync(new OnMapReadyCallback() {
-                    @Override
-                    public void onMapReady(GoogleMap googleMap) {
-                        if(latLng!=null) {
-                            mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-                        }
-                    }
-                });
-
-
-            }
-
-
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-
-            mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-            checkLocation(); //check whether location service is enable or not in your  phone
-        }
-
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuthListener = firebaseAuth -> {
-            if (firebaseAuth.getCurrentUser()==null)
-            {
-                getActivity().finish();
-            }
-
-        };
 
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +206,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     showSnackBar("Please enter text.", true);
 
                 } else
-                    fetchStores(s);
+                    fetchVendors(s);
             }
         });
 
@@ -223,7 +223,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View view) {
                 Snackbar.make(view, "Getting current location...", Snackbar.LENGTH_LONG).setAction("Action", null).show();
                 if(latLng!=null) {
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("Markers in Current Location").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                 }
 
@@ -232,6 +232,39 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
         return root;
+    }
+
+
+    public void setupMap(){
+        int permissionFINELOC = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION);
+
+        if (permissionFINELOC == PackageManager.PERMISSION_GRANTED) {
+            if (mapFragment == null) {
+                mapFragment = SupportMapFragment.newInstance();
+
+                mapFragment.getMapAsync(new OnMapReadyCallback() {
+                    @Override
+                    public void onMapReady(GoogleMap googleMap) {
+                        if(latLng!=null) {
+                            mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        }
+                    }
+                });
+
+            }
+
+
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+
+            mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+            checkLocation(); //check whether location service is enable or not in your  phone
+        }
     }
 
 
@@ -316,6 +349,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         return (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP_MR1);
     }
 
+
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -343,15 +377,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         }
                     }
                 } else {
-                    //fetchLocation();
+                    startLocationUpdates();
                     //Restart activity to get location permissions
 
                 }
 
                 break;
         }
-
-
     }
 
     private void showMessageOKCancel(String message, DialogInterface.OnClickListener okListener) {
@@ -454,6 +486,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
 
+
     }
 
     public void addMarkers(List<VendorModel> stores) {
@@ -465,6 +498,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
+
+        //fetchFirebaseDatabaseVendors();
+
+
     }
 
     @Override
@@ -503,16 +540,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     @Override
     public void onLocationChanged(Location location) {
-        /*
-        String msg = "Updated Location: " +
-                Double.toString(location.getLatitude()) + "," +
-                Double.toString(location.getLongitude());
-        */
-        //showSnackBar("Location Updated", false);
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .repeat(5)
-                .playOn(root.findViewById(R.id.fab));
 
         latLng = new LatLng(location.getLatitude(), location.getLongitude());
         latLngString = location.getLatitude() + "," + location.getLongitude();
@@ -521,6 +548,13 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+    /*
+        YoYo.with(Techniques.Flash)
+                .duration(700)
+                .repeat(2)
+                .playOn(root.findViewById(R.id.fab));
+
+     */
     }
 
     protected void startLocationUpdates() {
@@ -590,6 +624,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 
+/*
     private boolean requestSinglePermission() {
 
         Dexter.withContext(getActivity())
@@ -619,6 +654,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         return isPermission;
     }
+*/
+
+
 
 
     private boolean isNetworkConnected() {
@@ -626,7 +664,41 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         return cm.getActiveNetworkInfo() != null;
     }
 
-    private void fetchStores(String businessName) {
+    private void fetchFirebaseDatabaseVendors(){
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                //Iterate through all the child nodes of users
+                Iterable<DataSnapshot> snapshotIterator = dataSnapshot.getChildren();
+                Iterator<DataSnapshot> iterator = snapshotIterator.iterator();
+
+                while (iterator.hasNext()) {
+                    DataSnapshot next = (DataSnapshot) iterator.next();
+                    //Log.i(TAG, "Value = " + next.child("address").getValue());
+                    Double latitude = (Double) next.child("latitude").getValue();
+                    Double longitude = (Double) next.child("longitude").getValue();
+                    String name = (String) next.child("name").getValue();
+                    String address = (String) next.child("address").getValue();
+
+                    if(latitude!= null && longitude !=null) {
+                        LatLng latLng = new LatLng(latitude, longitude);
+                        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(name).snippet(address);
+                        mMap.addMarker(markerOptions);
+                    }
+                }
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.d(TAG, databaseError.getMessage());
+                Toast.makeText(getActivity(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void fetchVendors(String businessName) {
 
         if (!isNetworkConnected()) {
             showSnackBar("Check network connection.", true);
@@ -639,7 +711,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 @Override
                 public void onResponse(Call<PlacesPOJO.Root> call, Response<PlacesPOJO.Root> response) {
                     PlacesPOJO.Root root = response.body();
-
 
                     if (response.isSuccessful()) {
 

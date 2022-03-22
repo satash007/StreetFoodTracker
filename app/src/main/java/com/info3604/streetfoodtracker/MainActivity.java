@@ -1,5 +1,6 @@
 package com.info3604.streetfoodtracker;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
+
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -48,9 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(binding.appBarMain.toolbar);
 
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userRef = rootRef.child(DBUserRec);
-        Log.v("Userbase", userRef.getKey());
+
     /*
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,42 +82,18 @@ public class MainActivity extends AppCompatActivity {
         TextView navEmail = (TextView) headerView.findViewById(R.id.nav_header_email);
         ImageView navImage = (ImageView) headerView.findViewById(R.id.nav_ImageView);
 
-        // Read from the database
-        userRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot keyId: dataSnapshot.getChildren()) {
-                    if(keyId.child("uid").getValue() != null && (mAuth.getCurrentUser() != null)){
-                        if (keyId.child("uid").getValue().equals(mAuth.getCurrentUser().getUid())) {
-                            name = keyId.child("name").getValue(String.class);
-                            //profession = keyId.child("profession").getValue(String.class);
-                            //workplace = keyId.child("workplace").getValue(String.class);
-                            //phone = keyId.child("phone").getValue(String.class);
-                            Snackbar.make(binding.getRoot(), "Signed in as " + name, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-                            navUsername.setText(name);
-                            break;
-                        }
-                    }
-                }
 
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", databaseError.toException());            }
-        });
 
         //check the current user
         if (mAuth.getCurrentUser() != null) {
-            Snackbar.make(binding.getRoot(), "Signed in as " + mAuth.getCurrentUser().getDisplayName(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            //Snackbar.make(binding.getRoot(), "Signed in as " + mAuth.getCurrentUser().getDisplayName(), Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             navUsername.setText(mAuth.getCurrentUser().getDisplayName());
 
             navEmail.setText(mAuth.getCurrentUser().getEmail());
 
             if((mAuth.getCurrentUser().getPhotoUrl()) == null) {
                 //Using default user profile avatar image compliments Wikipedia Commons
+
                 Picasso.get()
                         .load("https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png")
                         .placeholder(R.drawable.logo_streetfoodtracker)
@@ -126,7 +102,10 @@ public class MainActivity extends AppCompatActivity {
                         //.centerCrop()
                         .into(navImage);
 
+
+
             }else{
+
                 Picasso.get()
                         .load(mAuth.getCurrentUser().getPhotoUrl())
                         .placeholder(R.drawable.logo_streetfoodtracker)
@@ -139,6 +118,35 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference userRef = rootRef.child(DBUserRec);
+        Log.v("Userbase", userRef.getKey());
+            // Read from the database
+            userRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot keyId: dataSnapshot.getChildren()) {
+                        if(keyId.child("uid").getValue() != null && (mAuth.getCurrentUser() != null)){
+                            if (keyId.child("uid").getValue().equals(mAuth.getCurrentUser().getUid())) {
+                                name = keyId.child("name").getValue(String.class);
+                                //profession = keyId.child("profession").getValue(String.class);
+                                //workplace = keyId.child("workplace").getValue(String.class);
+                                //phone = keyId.child("phone").getValue(String.class);
+                                Snackbar.make(binding.getRoot(), "Signed in as " + name, Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                                navUsername.setText(name);
+                                break;
+                            }
+                        }
+                    }
+
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Failed to read value
+                    Log.w(TAG, "Failed to read value.", databaseError.toException());            }
+            });
 
     }
 

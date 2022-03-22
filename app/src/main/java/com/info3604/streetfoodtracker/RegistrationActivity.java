@@ -155,7 +155,6 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 Intent locationPickerIntent = new LocationPickerActivity.Builder()
                         .withLocation(10.536421, -61.311951)
                         .withGeolocApiKey(getResources().getString(R.string.google_api_key))
@@ -215,8 +214,6 @@ public class RegistrationActivity extends AppCompatActivity {
 
 
                 });
-
-
 
 
     }
