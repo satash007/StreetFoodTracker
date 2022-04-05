@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/activity_user_comments.xml" value="0.22" />
         <entry key="app/src/main/res/drawable-anydpi/ic_current_location.xml" value="0.2905" />
         <entry key="app/src/main/res/drawable/bgGradient.xml" value="0.2985" />
         <entry key="app/src/main/res/drawable/button_shape.xml" value="0.2985" />
