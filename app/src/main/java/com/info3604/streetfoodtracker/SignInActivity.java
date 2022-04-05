@@ -235,6 +235,7 @@ public class SignInActivity extends AppCompatActivity {
                 });
     }
 
+   // TODO
     private boolean requestSinglePermission() {
 
         Dexter.withContext(this)
@@ -267,4 +268,7 @@ public class SignInActivity extends AppCompatActivity {
 
         return permissionGranted;
     }
+
+
+
 }
