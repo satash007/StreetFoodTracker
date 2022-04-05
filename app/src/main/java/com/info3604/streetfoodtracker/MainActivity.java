@@ -1,4 +1,7 @@
+
+
 package com.info3604.streetfoodtracker;
+
 
 import android.Manifest;
 import android.os.Bundle;
