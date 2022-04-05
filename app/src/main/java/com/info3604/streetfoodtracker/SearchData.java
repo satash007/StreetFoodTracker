@@ -48,4 +48,13 @@ public class SearchData {
     public List<VendorModel> getStoreModels() {
         return vendorModels;
     }
+
+    public List<PlacesPOJO.CustomA> getResults() {
+        return results;
+    }
+
+    public void setResults(List<PlacesPOJO.CustomA> results) {
+        this.results = results;
+    }
+
 }

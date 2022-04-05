@@ -24,6 +24,8 @@ public class PlacesPOJO {
         public String name;
         @SerializedName("rating")
         public String rating;
+        @SerializedName("distance")
+        public String distance;
     }
 
     public class Geometry implements Serializable {

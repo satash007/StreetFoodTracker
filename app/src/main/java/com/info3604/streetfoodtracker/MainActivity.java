@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
         TextView navUsername = (TextView) headerView.findViewById(R.id.nav_header_title);
         TextView navEmail = (TextView) headerView.findViewById(R.id.nav_header_email);
         ImageView navImage = (ImageView) headerView.findViewById(R.id.nav_ImageView);
+        ImageView navImageLogo = (ImageView) headerView.findViewById(R.id.nav_ImageView_Logo);
 
 
 
@@ -115,12 +116,10 @@ public class MainActivity extends AppCompatActivity {
                         .into(navImage);
 
             }
-        }
 
-
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference userRef = rootRef.child(DBUserRec);
-        Log.v("Userbase", userRef.getKey());
+            DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference userRef = rootRef.child(DBUserRec);
+            Log.v("Userbase", userRef.getKey());
             // Read from the database
             userRef.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -147,6 +146,13 @@ public class MainActivity extends AppCompatActivity {
                     // Failed to read value
                     Log.w(TAG, "Failed to read value.", databaseError.toException());            }
             });
+        }else{
+            navUsername.setText("Guest User");
+
+            navEmail.setText("Not logged in");
+            navImageLogo.setVisibility(View.GONE);
+
+        }
 
     }
 
