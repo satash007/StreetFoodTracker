@@ -15,12 +15,18 @@
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/comments_Recycler_View"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom"/>
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/comments_Recycler_View"
+            android:layout_marginTop="60dp"/>
+    </LinearLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -34,22 +40,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Add a comment..."
-            android:id="@+id/add_comment"
+            android:id="@+id/EditText_comment"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@android:color/transparent"
-            android:layout_toLeftOf="@+id/post"/>
+            android:layout_toLeftOf="@+id/post_comment_btn"/>
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/post"
+            android:id="@+id/post_comment_btn"
             android:text="POST"
             android:layout_marginEnd="5dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/myColorPrimary"/>
+            android:textColor="@color/white"/>
     </RelativeLayout>
-
 </RelativeLayout>
