@@ -38,7 +38,7 @@ import com.karumi.dexter.listener.single.PermissionListener;
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "";
     private EditText inputEmail, inputPassword;
-    private Button btnLogin;
+    private Button btnLogin, btnContinueAsGuest;
     private TextView textRegister;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
@@ -80,6 +80,8 @@ public class SignInActivity extends AppCompatActivity {
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
         btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnContinueAsGuest = (Button) findViewById(R.id.btnContinueAsGuest);
+
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
         textRegister = (TextView) findViewById(R.id.sign_in_button);
         btnSignInGoogle = (SignInButton) findViewById(R.id.sign_in_google);
@@ -93,6 +95,7 @@ public class SignInActivity extends AppCompatActivity {
                     progressBar.setVisibility(View.VISIBLE);
                     signIn();
                 }else{
+                    progressBar.setVisibility(View.GONE);
                     requestSinglePermission();
                 }
             }
@@ -170,6 +173,16 @@ public class SignInActivity extends AppCompatActivity {
 
         });
 
+        btnContinueAsGuest.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
 
     }
 

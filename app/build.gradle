@@ -57,13 +57,15 @@ dependencies {
 
     /*Legacy Maps SDK*/
     //implementation 'com.google.android.gms:play-services-maps:16.1.0'
-    //implementation 'com.google.android.gms:play-services-location:15.0.1'
+    //implementation 'com.google.android.gms:play-s
+    // ervices-location:15.0.1'
 
     /*New Maps SDK that features improved renderer*/
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
     implementation 'com.google.android.gms:play-services-location:19.0.1'
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
 
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 
 
     implementation 'com.karumi:dexter:6.2.3'

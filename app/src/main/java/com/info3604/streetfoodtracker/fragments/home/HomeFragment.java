@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
@@ -35,6 +36,10 @@ import androidx.fragment.app.Fragment;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 //import com.daimajia.androidanimations.library.Techniques;
 //import com.daimajia.androidanimations.library.YoYo;
@@ -50,6 +55,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,6 +65,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.maps.android.PolyUtil;
 import com.info3604.streetfoodtracker.PlacesPOJO;
 import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.SearchData;
@@ -68,6 +76,7 @@ import com.info3604.streetfoodtracker.API.APIClient;
 import com.info3604.streetfoodtracker.API.ApiInterface;
 import com.info3604.streetfoodtracker.SignInActivity;
 
+import com.info3604.streetfoodtracker.model.DirectionResponses;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -76,8 +85,10 @@ import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -87,8 +98,8 @@ import static android.Manifest.permission.INTERNET;
 
 public class HomeFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener{
 
-    FirebaseAuth mAuth;
-    FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     private GoogleMap mMap;
 
@@ -108,24 +119,34 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private ArrayList<String> permissionsRejected = new ArrayList<>();
     private ArrayList<String> permissions = new ArrayList<>();
     private final static int ALL_PERMISSIONS_RESULT = 101;
-    List<VendorModel> vendorModels;
-    ApiInterface apiService;
+    private List<VendorModel> vendorModels;
+    private ApiInterface apiService;
 
-    String latLngString;
-    LatLng latLng;
-    EditText editText;
-    Button btnSearch, btnViewVendors;
-    List<PlacesPOJO.CustomA> results;
+    private String latLngString, vendorLoc, currentLoc;
+    private LatLng latLng;
+    private EditText editText;
+    private Button btnSearch, btnViewVendors;
+    private List<PlacesPOJO.CustomA> results;
 
-    FloatingActionButton fab;
-    View root;
+    private FloatingActionButton fab;
+    private View root;
 
-    FirebaseDatabase firebaseDatabase;
+    private FirebaseDatabase firebaseDatabase;
 
     // creating a variable for our Database
     // Reference for Firebase.
-    DatabaseReference databaseReference;
-    SupportMapFragment mapFragment;
+    private DatabaseReference databaseReference;
+    private SupportMapFragment mapFragment;
+
+    private static int vendorCount = 0;
+
+    private PolylineOptions polyline;
+    private Polyline mPolyline;
+    private Marker currentMarker, vendorMarker;
+
+    private List<PlacesPOJO.CustomA> getResults(List<PlacesPOJO.CustomA> results){
+        return results;
+    }
 
     @Override
     public void onStart() {
@@ -153,7 +174,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         mAuthListener = firebaseAuth -> {
             if (firebaseAuth.getCurrentUser()==null)
             {
-                getActivity().finish();
+                //getActivity().finish();
             }
 
         };
@@ -167,6 +188,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 .findFragmentById(R.id.map);
 
         setupMap();
+
+
     }
 
 
@@ -203,10 +226,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             public void onClick(View v) {
                 String s = editText.getText().toString().trim();
                 if (s == null || s.length() == 0) {
-                    showSnackBar("Please enter text.", true);
+                    showSnackBar("Please enter something into the search bar.", true);
 
-                } else
+                } else {
+                    mMap.clear(); //must clear map here
+                    vendorCount = 0;
                     fetchVendors(s);
+                    fetchFirebaseDatabaseVendors(s);
+                    if(vendorCount == 0)
+                        showSnackBar("No matches found near you.", true);
+                    else
+                        showSnackBar("Found " + vendorCount + " vendors.", false);
+                }
             }
         });
 
@@ -229,7 +260,6 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
             }
         });
-
 
         return root;
     }
@@ -401,8 +431,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -421,7 +450,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     */
         if (latLng != null) {
-            mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+            currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).draggable(true));
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
 
@@ -431,6 +460,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         if(vendorModels !=null && vendorModels.size()>0){
             addMarkers(vendorModels);
         }
+
+
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
@@ -451,6 +482,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     double roundOff = Math.round(distance * 10.0) / 10.0;
 
                     marker.setSnippet(roundOff + "km away"); //in km
+
+
+                    vendorMarker = marker;
+                    currentLoc = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
+                    vendorLoc = String.valueOf(marker.getPosition().latitude) + "," + String.valueOf(marker.getPosition().longitude);
+                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
+
+                    ApiServices apiServices = RetrofitClient.apiServices(getActivity());
+                    apiServices.getDirection(currentLoc, vendorLoc, getString(R.string.google_maps_key))
+                            .enqueue(new Callback<DirectionResponses>() {
+                                @Override
+                                public void onResponse(@NonNull Call<DirectionResponses> call, @NonNull Response<DirectionResponses> response) {
+                                    drawPolyline(response);
+                                    Log.d("Success", response.message());
+                                }
+
+                                @Override
+                                public void onFailure(@NonNull Call<DirectionResponses> call, @NonNull Throwable t) {
+                                    Log.e("Failed to get data", t.getLocalizedMessage());
+                                }
+                            });
 
                 }
 
@@ -515,11 +567,52 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
 
 
+    }
+
+    private void drawPolyline(@NonNull Response<DirectionResponses> response) {
+        if(mPolyline != null) {
+            clearPolylines();
+        }
+            Log.e(TAG, response.toString());
+            if (response.body() != null) {
+
+                String shape = response.body().getRoutes().get(0).getOverviewPolyline().getPoints();
+                polyline = new PolylineOptions()
+                        .addAll(PolyUtil.decode(shape))
+                        .width(8f)
+                        .geodesic(true)
+                        .color(Color.RED);
+                mPolyline = mMap.addPolyline(polyline);
+            }
 
     }
 
+
+    private void clearPolylines() {
+        mPolyline.remove();
+    }
+
+
+    private interface ApiServices {
+        @GET("maps/api/directions/json")
+        Call<DirectionResponses> getDirection(@Query("origin") String origin,
+                                              @Query("destination") String destination,
+                                              @Query("key") String apiKey);
+    }
+
+    private static class RetrofitClient {
+        static ApiServices apiServices(Context context) {
+            Retrofit retrofit = new Retrofit.Builder()
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .baseUrl(context.getResources().getString(R.string.base_url))
+                    .build();
+
+            return retrofit.create(ApiServices.class);
+        }
+    }
+
     public void addMarkers(List<VendorModel> stores) {
-        mMap.clear();
+        //mMap.clear();
         for (VendorModel s : stores) {
             mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name));
         }
@@ -528,10 +621,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
         }
 
-        //fetchFirebaseDatabaseVendors();
-
-
     }
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -693,7 +784,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         return cm.getActiveNetworkInfo() != null;
     }
 
-    private void fetchFirebaseDatabaseVendors(){
+    private void fetchFirebaseDatabaseVendors(String s){
+        //mMap.clear();
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -704,16 +796,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
                 while (iterator.hasNext()) {
                     DataSnapshot next = (DataSnapshot) iterator.next();
-                    //Log.i(TAG, "Value = " + next.child("address").getValue());
                     Double latitude = (Double) next.child("latitude").getValue();
                     Double longitude = (Double) next.child("longitude").getValue();
                     String name = (String) next.child("name").getValue();
                     String address = (String) next.child("address").getValue();
 
                     if(latitude!= null && longitude !=null) {
-                        LatLng latLng = new LatLng(latitude, longitude);
-                        MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(name).snippet(address);
-                        mMap.addMarker(markerOptions);
+                       if (name.toLowerCase(Locale.ROOT).contains(s.toLowerCase(Locale.ROOT))) {
+                            LatLng latLng = new LatLng(latitude, longitude);
+                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(name).snippet(address).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                            mMap.addMarker(markerOptions);
+                            vendorCount++;
+                        }
                     }
                 }
 
@@ -746,27 +840,36 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                         if (root.status.equals("OK")) {
                             SearchData x = SearchData.getInstance();
 
+
                             results = root.customA;
+
                             x.results = results;
+
+
                             vendorModels = new ArrayList<>();
                             for (int i = 0; i < results.size(); i++) {
 
                                 //if (i == 10)
                                 //    break;
+                                Log.d(TAG,"RESULTS: " + results.get(i));
+
                                 PlacesPOJO.CustomA info = results.get(i);
 
-                                vendorModels.add(new VendorModel(info.name, info.vicinity, info.geometry.locationA.lat, info.geometry.locationA.lng, info.rating));
+
+                                vendorModels.add(new VendorModel(info.name, info.vicinity, info.distance, info.geometry.locationA.lat, info.geometry.locationA.lng, info.rating));
+
                                 if (vendorModels.size() == 10 || vendorModels.size() == results.size()) {
 
                                 }
                             }
                             x.setStores(vendorModels);
                             int size = vendorModels.size();
-                            showSnackBar("Found " + size + " vendors.", false);
+                            //showSnackBar("Found " + size + " vendors.", false);
+                            vendorCount = vendorCount + size;
                             addMarkers(vendorModels);
 
                         } else {
-                            showSnackBar("No matches found near you.", true);
+                            //showSnackBar("No matches found near you.", true);
                         }
 
                     } else if (response.code() != 200) {
@@ -781,6 +884,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     call.cancel();
                 }
             });
+
         } else {
             showSnackBar("Enable Location and try again.", true);
         }
