@@ -530,37 +530,36 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                             i.putExtra("VENDOR_ADDRESS", vM.address);
                             i.putExtra("VENDOR_RATING", x.results.get(b).rating);
 
-                            databaseReference.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                                    //Iterate through all the child nodes of users
-                                    Iterable<DataSnapshot> snapshotIterator = dataSnapshot.getChildren();
-                                    Iterator<DataSnapshot> iterator = snapshotIterator.iterator();
-
-                                    while (iterator.hasNext()) {
-                                        DataSnapshot next = (DataSnapshot) iterator.next();
-
-                                        if(marker.getTitle().equals(next.child("name").getValue())) {
-                                            i.putExtra("VENDOR_UID", next.child("uid").getValue().toString());
-                                            Toast.makeText(getActivity(), next.child("uid").getValue().toString(), Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError databaseError) {
-                                    Log.d(TAG, databaseError.getMessage());
-                                    Toast.makeText(getActivity(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-
-                                }
-                            });
-
                             b++;
                         }
                     }
+                    databaseReference.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
-                    //startActivity(i);
+                            //Iterate through all the child nodes of users
+                            Iterable<DataSnapshot> snapshotIterator = dataSnapshot.getChildren();
+                            Iterator<DataSnapshot> iterator = snapshotIterator.iterator();
+
+                            while (iterator.hasNext()) {
+                                DataSnapshot next = (DataSnapshot) iterator.next();
+                                Log.d(TAG, "test = " + next.child("name").getValue().toString());
+
+                                if(marker.getTitle().equals(next.child("name").getValue())) {
+                                    i.putExtra("VENDOR_UID", next.child("uid").getValue().toString());
+                                }
+                            }
+
+                        }
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+                            Log.d(TAG, databaseError.getMessage());
+                            Toast.makeText(getActivity(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+
+                    startActivity(i);
                 }
             }
         });

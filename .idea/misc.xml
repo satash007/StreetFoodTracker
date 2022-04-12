@@ -5,8 +5,9 @@
       <map>
         <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/activity_main.xml" value="0.1675925925925926" />
         <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/activity_maps.xml" value="0.2" />
-        <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/activity_user_comments.xml" value="0.22" />
+        <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/activity_user_comments.xml" value="0.1" />
         <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/activity_vendor_list.xml" value="0.2" />
+        <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/comment_item.xml" value="0.1" />
         <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/fragment_gallery.xml" value="0.2" />
         <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/fragment_home.xml" value="0.1675925925925926" />
         <entry key="..\:/Users/NARIN/AndroidStudioProjects/StreetFoodTracker/app/src/main/res/layout/fragment_slideshow.xml" value="0.2" />
