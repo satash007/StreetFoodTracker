@@ -677,31 +677,6 @@ public class VendorMapFragment extends Fragment implements OnMapReadyCallback, G
                             i.putExtra("VENDOR_RATING", vM.rating);
                         }
                     }
-                    databaseReference.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                            //Iterate through all the child nodes of users
-                            Iterable<DataSnapshot> snapshotIterator = dataSnapshot.getChildren();
-                            Iterator<DataSnapshot> iterator = snapshotIterator.iterator();
-
-                            while (iterator.hasNext()) {
-                                DataSnapshot next = (DataSnapshot) iterator.next();
-                                Log.d(TAG, "test = " + next.child("name").getValue().toString());
-
-                                if(marker.getTitle().equals(next.child("name").getValue())) {
-                                    i.putExtra("VENDOR_UID", next.child("uid").getValue().toString());
-                                }
-                            }
-
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError databaseError) {
-                            Log.d(TAG, databaseError.getMessage());
-                            Toast.makeText(getActivity(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-
-                        }
-                    });
 
                     startActivity(i);
 
