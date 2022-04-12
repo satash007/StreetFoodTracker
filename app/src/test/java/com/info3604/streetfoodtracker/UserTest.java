@@ -1,6 +1,8 @@
 package com.info3604.streetfoodtracker;
 
 
+import com.info3604.streetfoodtracker.model.User;
+
 import org.junit.Before;
 import org.junit.Test;
 

@@ -14,7 +14,8 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
-import com.info3604.streetfoodtracker.ImageHandling.CircleTransform;
+import com.info3604.streetfoodtracker.imagehandling.CircleTransform;
+import com.info3604.streetfoodtracker.model.FoodTypeFirebaseModel;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;

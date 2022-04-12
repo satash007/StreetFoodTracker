@@ -1,6 +1,11 @@
-package com.info3604.streetfoodtracker.model;
+package com.info3604.streetfoodtracker.model.maproutes;
 
 import com.google.gson.annotations.SerializedName;
+import com.info3604.streetfoodtracker.model.maproutes.Distance;
+import com.info3604.streetfoodtracker.model.maproutes.Duration;
+import com.info3604.streetfoodtracker.model.maproutes.EndLocation;
+import com.info3604.streetfoodtracker.model.maproutes.Polyline;
+import com.info3604.streetfoodtracker.model.maproutes.StartLocation;
 
 public class StepsItem{
 

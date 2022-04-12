@@ -1,5 +1,8 @@
 package com.info3604.streetfoodtracker;
 
+import com.info3604.streetfoodtracker.model.PlacesPOJO;
+import com.info3604.streetfoodtracker.model.VendorModel;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

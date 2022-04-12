@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker.ImageHandling;
+package com.info3604.streetfoodtracker.imagehandling;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

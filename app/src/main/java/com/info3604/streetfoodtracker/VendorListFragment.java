@@ -11,6 +11,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
+import com.info3604.streetfoodtracker.model.PlacesPOJO;
+import com.info3604.streetfoodtracker.model.VendorModel;
 
 import java.util.Arrays;
 import java.util.List;

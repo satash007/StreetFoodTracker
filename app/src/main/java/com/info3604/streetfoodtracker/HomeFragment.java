@@ -61,7 +61,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        getActivity().setTitle("Street Food Tracker");
+        //getActivity().setTitle("Street Food Tracker");
 
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFrag(new ListViewFragment(), "Explore");
+        adapter.addFrag(new ExploreCategoriesFragment(), "Explore");
         adapter.addFrag(new VendorMapFragment(), "Map View");
         adapter.addFrag(new VendorListFragment(), "List View");
 

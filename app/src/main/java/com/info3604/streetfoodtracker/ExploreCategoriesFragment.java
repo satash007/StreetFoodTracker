@@ -9,12 +9,14 @@ import android.view.ViewGroup;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.info3604.streetfoodtracker.model.FoodTypeFirebaseModel;
+import com.info3604.streetfoodtracker.model.LocationTypeFirebaseModel;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ListViewFragment extends Fragment {
+public class ExploreCategoriesFragment extends Fragment {
 
     private RecyclerView horizontalList;
     private RecyclerView verticalList;
@@ -22,13 +24,13 @@ public class ListViewFragment extends Fragment {
     private BrowseByLocationListAdapter verticalAdapter;
     DatabaseReference dbRef1, dbRef2;
 
-    public ListViewFragment() {
+    public ExploreCategoriesFragment() {
         // Required empty public constructor
     }
 
 
-    public static ListViewFragment newInstance() {
-        ListViewFragment fragment = new ListViewFragment();
+    public static ExploreCategoriesFragment newInstance() {
+        ExploreCategoriesFragment fragment = new ExploreCategoriesFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;

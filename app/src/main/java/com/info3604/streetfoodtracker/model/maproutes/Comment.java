@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker.model;
+package com.info3604.streetfoodtracker.model.maproutes;
 
 public class Comment {
     private String Comment;

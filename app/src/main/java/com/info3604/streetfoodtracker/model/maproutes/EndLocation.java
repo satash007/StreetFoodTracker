@@ -1,8 +1,8 @@
-package com.info3604.streetfoodtracker.model;
+package com.info3604.streetfoodtracker.model.maproutes;
 
 import com.google.gson.annotations.SerializedName;
 
-public class StartLocation{
+public class EndLocation{
 
 	@SerializedName("lng")
 	private double lng;

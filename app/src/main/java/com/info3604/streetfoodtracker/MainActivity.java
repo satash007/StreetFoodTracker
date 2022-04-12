@@ -4,11 +4,9 @@ package com.info3604.streetfoodtracker;
 
 
 import android.Manifest;
-import android.app.Application;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
@@ -28,13 +26,10 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDestination;
 import androidx.navigation.Navigation;
 
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -50,7 +45,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.info3604.streetfoodtracker.ImageHandling.CircleTransform;
+import com.info3604.streetfoodtracker.imagehandling.CircleTransform;
 import com.info3604.streetfoodtracker.databinding.ActivityMainBinding;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;

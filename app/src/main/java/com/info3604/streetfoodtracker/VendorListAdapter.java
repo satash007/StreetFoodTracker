@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.info3604.streetfoodtracker.model.VendorModel;
 
 import java.util.List;
 

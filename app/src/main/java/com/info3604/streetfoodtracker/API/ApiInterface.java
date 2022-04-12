@@ -1,6 +1,6 @@
 package com.info3604.streetfoodtracker.API;
 
-import com.info3604.streetfoodtracker.PlacesPOJO;
+import com.info3604.streetfoodtracker.model.PlacesPOJO;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

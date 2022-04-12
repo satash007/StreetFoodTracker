@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.model;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,10 +1,10 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.model;
 
-public class LocationTypeFirebaseModel {
+public class FoodTypeFirebaseModel {
 
     // Variable to store data corresponding
     // to foodName keyword in database
-    private String locationName;
+    private String foodName;
 
     // Variable to store data corresponding
     // to imageLink keyword in database
@@ -12,16 +12,16 @@ public class LocationTypeFirebaseModel {
 
     // Mandatory empty constructor
     // for use of FirebaseUI
-    public LocationTypeFirebaseModel(){
+    public FoodTypeFirebaseModel(){
     }
 
     // Getter and setter methods
-    public String getLocationName(){
-        return locationName;
+    public String getFoodName(){
+        return foodName;
     }
 
-    public void setLocationName(String locationName){
-        this.locationName = locationName;
+    public void setFoodName(String foodName){
+        this.foodName = foodName;
     }
 
     public String getImageLink(){
@@ -32,3 +32,4 @@ public class LocationTypeFirebaseModel {
         this.imageLink = imageLink;
     }
 }
+
