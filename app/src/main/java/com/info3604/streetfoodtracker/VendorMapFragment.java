@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker.fragments.home;
+package com.info3604.streetfoodtracker;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -13,6 +14,8 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,13 +27,16 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import retrofit2.Call;
@@ -43,6 +49,12 @@ import retrofit2.http.Query;
 
 //import com.daimajia.androidanimations.library.Techniques;
 //import com.daimajia.androidanimations.library.YoYo;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationRequest;
@@ -52,6 +64,9 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -66,29 +81,22 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.maps.android.PolyUtil;
-import com.info3604.streetfoodtracker.PlacesPOJO;
-import com.info3604.streetfoodtracker.R;
-import com.info3604.streetfoodtracker.SearchData;
-import com.info3604.streetfoodtracker.VendorList;
-import com.info3604.streetfoodtracker.VendorModel;
-import com.info3604.streetfoodtracker.DisplayVendorProfileActivity;
 import com.info3604.streetfoodtracker.API.APIClient;
 import com.info3604.streetfoodtracker.API.ApiInterface;
-import com.info3604.streetfoodtracker.SignInActivity;
 
 import com.info3604.streetfoodtracker.model.DirectionResponses;
-import com.karumi.dexter.Dexter;
-import com.karumi.dexter.PermissionToken;
-import com.karumi.dexter.listener.PermissionDeniedResponse;
-import com.karumi.dexter.listener.PermissionGrantedResponse;
-import com.karumi.dexter.listener.PermissionRequest;
-import com.karumi.dexter.listener.single.PermissionListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
@@ -96,14 +104,14 @@ import static android.Manifest.permission.ACCESS_NETWORK_STATE;
 import static android.Manifest.permission.ACCESS_WIFI_STATE;
 import static android.Manifest.permission.INTERNET;
 
-public class HomeFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener{
+public class VendorMapFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener{
 
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
     private GoogleMap mMap;
 
-    private static final String TAG = "HomeFragment";
+    private static final String TAG = "VendorMapFragment";
     private GoogleApiClient mGoogleApiClient;
     private Location mLocation;
     private LocationManager mLocationManager;
@@ -125,8 +133,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private String latLngString, vendorLoc, currentLoc;
     private LatLng latLng;
     private EditText editText;
-    private Button btnSearch, btnViewVendors;
+    private Button btnSearch;
     private List<PlacesPOJO.CustomA> results;
+    private ProgressBar progressBar;
 
     private FloatingActionButton fab;
     private View root;
@@ -138,11 +147,51 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     private DatabaseReference databaseReference;
     private SupportMapFragment mapFragment;
 
-    private static int vendorCount = 0;
+    private int vendorCount = 0;
 
     private PolylineOptions polyline;
     private Polyline mPolyline;
-    private Marker currentMarker, vendorMarker;
+    private Marker currentMarker = null, vendorMarker;
+
+    private Circle radiusCircle;
+
+    public Toolbar mToolbar;
+
+    private AdView mAdView;
+
+    private String searchQuery = "";
+
+    public VendorMapFragment(){
+
+    }
+
+    public void searchVendors(String searchQuery){
+        progressBar.setVisibility(View.VISIBLE);
+
+        CountDownTimer countDownTimer =
+                new CountDownTimer(1 * 1000, 1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        progressBar.setVisibility(View.GONE);
+
+                    }
+                };
+        countDownTimer.start();
+        fetchVendors(searchQuery);
+    }
+
+    public static VendorMapFragment newInstance(int page){
+        Bundle args = new Bundle();
+        args.putInt(TAG, page);
+        VendorMapFragment fragment = new VendorMapFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
 
     private List<PlacesPOJO.CustomA> getResults(List<PlacesPOJO.CustomA> results){
         return results;
@@ -157,6 +206,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         if (mGoogleApiClient != null) {
             mGoogleApiClient.connect();
         }
+
+        EventBus.getDefault().register(this);
 
     }
 
@@ -179,47 +230,29 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
         };
 
-        firebaseDatabase = FirebaseDatabase.getInstance();
-
-        // below line is used to get reference for our database.
-        databaseReference = firebaseDatabase.getReference().child("Userbase").getRef();
-
         mapFragment = (SupportMapFragment) getChildFragmentManager()
                 .findFragmentById(R.id.map);
 
         setupMap();
 
-
-    }
+        mToolbar = getActivity().findViewById(R.id.toolbar);
+        mToolbar.setTitle("Street Food Tracker");
+        mToolbar.setSubtitle("Discover, track and review street foods and their vendors");
+        mToolbar.setTitleTextColor(getResources().getColor(R.color.red_200));
+        mToolbar.setSubtitleTextColor(getResources().getColor(R.color.cardview_dark_background));
+        mToolbar.setSubtitleTextAppearance(getContext(), R.style.ToolbarSubtitleTextAppearance);
+        }
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        /*
-        homeViewModel =
-                new ViewModelProvider(this).get(HomeViewModel.class);
-
-        binding = FragmentHomeBinding.inflate(inflater, container, false);
-        View root = binding.getRoot();
-
-        final TextView textView = binding.textHome;
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });
-        */
 
         root = inflater.inflate(R.layout.activity_maps, container, false);
 
         editText = (EditText) root.findViewById(R.id.editText);
         btnSearch = (Button) root.findViewById(R.id.btnSearch);
-        btnViewVendors = (Button) root.findViewById(R.id.btnViewVendors);
-
+        progressBar = (ProgressBar) root.findViewById(R.id.progressBar);
         fab = (FloatingActionButton) root.findViewById(R.id.fab);
-
-
 
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -229,37 +262,75 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     showSnackBar("Please enter something into the search bar.", true);
 
                 } else {
-                    mMap.clear(); //must clear map here
-                    vendorCount = 0;
-                    fetchVendors(s);
-                    fetchFirebaseDatabaseVendors(s);
-                    if(vendorCount == 0)
-                        showSnackBar("No matches found near you.", true);
-                    else
-                        showSnackBar("Found " + vendorCount + " vendors.", false);
-                }
-            }
-        });
+                    progressBar.setVisibility(View.VISIBLE);
 
-        btnViewVendors.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(editText.getText().toString().trim() != null){
-                       startActivity(new Intent(getActivity(), VendorList.class));
-                   }
+                    CountDownTimer countDownTimer =
+                            new CountDownTimer(1 * 1000, 1000) {
+                                @Override
+                                public void onTick(long millisUntilFinished) {
+                                }
+
+                                @Override
+                                public void onFinish() {
+                                  progressBar.setVisibility(View.GONE);
+
+                                }
+                            };
+                    countDownTimer.start();
+                    fetchVendors(s);
+                }
             }
         });
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Getting current location...", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-                if(latLng!=null) {
-                    mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                Snackbar.make(view, "Loading your current location...", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+
+                if(currentMarker == null) {
+                    currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+                }else{
+                    if (latLng != null) {
+                        // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+                        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                        CameraPosition cameraPosition = new CameraPosition.Builder( )
+                                .target(latLng)      // Sets the center of the map to the vendor selected
+                                .zoom(16)                   // Sets the zoom
+                                //.bearing(90)                // Sets the orientation of the camera to east
+                                //.tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                                .build();                   // Creates a CameraPosition from the builder
+                        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback(){
+
+                            @Override
+                            public void onFinish(){
+                                currentMarker.showInfoWindow();
+
+                            }
+
+                            @Override
+                            public void onCancel(){
+
+
+                            }
+                        });
+                    }
                 }
 
             }
         });
+
+        mAdView = root.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        List<String> testDeviceIds = Arrays.asList("0E9F3F151309F1E042345DACC334B7F9");
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        MobileAds.setRequestConfiguration(configuration);
+
 
         return root;
     }
@@ -275,9 +346,9 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 mapFragment.getMapAsync(new OnMapReadyCallback() {
                     @Override
                     public void onMapReady(GoogleMap googleMap) {
-                        if(latLng!=null) {
-                            mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+                        if(latLng!=null && currentMarker == null) {
+                            currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
                         }
                     }
                 });
@@ -303,14 +374,12 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         super.onDestroyView();
     }
 
+/*
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
-
-
-
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -334,6 +403,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
     }
+*/
 
 
 
@@ -428,6 +498,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 .show();
     }
 
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -439,7 +510,18 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
     //it was pre written
     @Override
     public void onMapReady(GoogleMap googleMap) {
+
+
+        firebaseDatabase = FirebaseDatabase.getInstance();
+
+        // below line is used to get reference for our database.
+        databaseReference = firebaseDatabase.getReference().child("Userbase").getRef();
+
         mMap = googleMap;
+        mMap.getUiSettings().setZoomControlsEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(false);
+        mMap.setPadding(0,0,0, 150); //move the controls above the AdMob banner
+
 
         /*
         TODO: Add feature to use profile photo in marker icon
@@ -449,18 +531,69 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         Bitmap bitmap = bitmapDrawable .getBitmap();
 
     */
-        if (latLng != null) {
-            currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)).draggable(true));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
-        }
 
-        SearchData x = SearchData.getInstance();
-        vendorModels = x.getStoreModels();
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            public void onMapLoaded() {
 
-        if(vendorModels !=null && vendorModels.size()>0){
-            addMarkers(vendorModels);
-        }
+                currentMarker = mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                if (vendorMarker != null) {
 
+                    // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+                    // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                    CameraPosition cameraPosition = new CameraPosition.Builder( )
+                            .target(vendorMarker.getPosition())      // Sets the center of the map to the vendor selected
+                            .zoom(11)                   // Sets the zoom
+                            //.bearing(90)                // Sets the orientation of the camera to east
+                            //.tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                            .build();                   // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback(){
+
+                        @Override
+                        public void onFinish(){
+                            currentMarker.showInfoWindow();
+                        }
+
+                        @Override
+                        public void onCancel(){
+
+
+                        }
+                    });
+
+
+                }else{
+                      // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+            CameraPosition cameraPosition = new CameraPosition.Builder( )
+                    .target(latLng)      // Sets the center of the map to the vendor selected
+                    .zoom(11)                   // Sets the zoom
+                    //.bearing(90)                // Sets the orientation of the camera to east
+                    //.tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback(){
+
+                @Override
+                public void onFinish(){
+                    currentMarker.showInfoWindow();
+                }
+
+                @Override
+                public void onCancel(){
+
+
+                }
+            });
+                }
+            }
+        });
+
+
+        //Load search history
+        loadSeachHistory();
 
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -487,7 +620,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     vendorMarker = marker;
                     currentLoc = String.valueOf(latLng.latitude) + "," + String.valueOf(latLng.longitude);
                     vendorLoc = String.valueOf(marker.getPosition().latitude) + "," + String.valueOf(marker.getPosition().longitude);
-                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
+                    //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(marker.getPosition(), 12f));
 
                     ApiServices apiServices = RetrofitClient.apiServices(getActivity());
                     apiServices.getDirection(currentLoc, vendorLoc, getString(R.string.google_maps_key))
@@ -495,6 +628,19 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 @Override
                                 public void onResponse(@NonNull Call<DirectionResponses> call, @NonNull Response<DirectionResponses> response) {
                                     drawPolyline(response);
+
+                                    // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+                                    mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+                                    // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+                                    CameraPosition cameraPosition = new CameraPosition.Builder( )
+                                            .target(marker.getPosition())      // Sets the center of the map to the vendor selected
+                                            .zoom(16)                   // Sets the zoom
+                                            //.bearing(90)                // Sets the orientation of the camera to east
+                                            //.tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                                            .build();                   // Creates a CameraPosition from the builder
+                                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
                                     Log.d("Success", response.message());
                                 }
 
@@ -524,22 +670,44 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                     Intent i = new Intent(getActivity(), DisplayVendorProfileActivity.class);
                     i.putExtra("VENDOR_NAME", marker.getTitle().toString());
 
-                    int b=0;
-                    for (VendorModel vM : vendorModels) {
+                    // using for-each loop for iteration over Map
+                    for (VendorModel vM: vendorModels) {
                         if (vM.lat.equals(String.valueOf(marker.getPosition().latitude)) && vM.lng.equals(String.valueOf(marker.getPosition().longitude))) {
                             i.putExtra("VENDOR_ADDRESS", vM.address);
-                            i.putExtra("VENDOR_RATING", x.results.get(b).rating);
-
-                            b++;
+                            i.putExtra("VENDOR_RATING", vM.rating);
                         }
                     }
 
                     startActivity(i);
+
                 }
             }
         });
 
+        }
 
+    private void loadSeachHistory() {
+        SearchData x = SearchData.getInstance();
+        vendorModels = x.getStoreModels();
+
+        if (vendorModels != null && vendorModels.size() > 0) {
+            addMarkers(vendorModels);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onResultReceived(String result) {
+        searchQuery = result;
+        editText.setText(result);
+        searchVendors(result);
+    }
+
+    private void drawCircle(LatLng latLng, Double radius){
+       radiusCircle = mMap.addCircle(new CircleOptions()
+                .center(latLng)
+                .radius(radius)
+                .strokeWidth(1.0f)
+                .strokeColor(ContextCompat.getColor(getContext(), R.color.red_200)).fillColor(ContextCompat.getColor(getContext(), R.color.browser_actions_divider_color)));
 
     }
 
@@ -587,13 +755,49 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 
     public void addMarkers(List<VendorModel> stores) {
         //mMap.clear();
-        for (VendorModel s : stores) {
-            mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name));
-        }
+
         if(latLng!=null) {
             mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 10));
+            drawCircle(latLng, 5000.00); //TODO: Pass value by parameter for radius
+
+           /* // Zoom out to zoom level 10, animating with a duration of 2 seconds.
+            mMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+
+            // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+            CameraPosition cameraPosition = new CameraPosition.Builder( )
+                    .target(vendorMarker.getPosition())      // Sets the center of the map to the vendor selected
+                    .zoom(11)                   // Sets the zoom
+                    //.bearing(90)                // Sets the orientation of the camera to east
+                    //.tilt(30)                   // Sets the tilt of the camera to 30 degrees
+                    .build();                   // Creates a CameraPosition from the builder
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition), new GoogleMap.CancelableCallback(){
+
+                @Override
+                public void onFinish(){
+
+                }
+
+                @Override
+                public void onCancel(){
+
+
+                }
+            });*/
+
         }
+
+        for (VendorModel s : stores) {
+            //vendorMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name));
+            if(s.type.equals("Firebase"))
+                vendorMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)));
+            else
+                vendorMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(Double.parseDouble(s.lat), Double.parseDouble(s.lng))).title(s.name).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+            //Log.e(TAG, "MAP: " + s.toString());
+        }
+
+
 
     }
 
@@ -617,7 +821,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             startLocationUpdates();
         }
         if (mLocation == null) {
-            showSnackBar("Location not Detected", true);
+            showSnackBar("Please wait...detecting your current location", true);
         }
     }
 
@@ -682,6 +886,8 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
             mGoogleApiClient.disconnect();
         }
         mAuth.removeAuthStateListener(mAuthListener);
+        EventBus.getDefault().unregister(this);
+
     }
 
     private boolean checkLocation() {
@@ -758,44 +964,10 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         return cm.getActiveNetworkInfo() != null;
     }
 
-    private void fetchFirebaseDatabaseVendors(String s){
-        //mMap.clear();
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+    private void fetchVendors(String searchQuery) {
 
-                //Iterate through all the child nodes of users
-                Iterable<DataSnapshot> snapshotIterator = dataSnapshot.getChildren();
-                Iterator<DataSnapshot> iterator = snapshotIterator.iterator();
-
-                while (iterator.hasNext()) {
-                    DataSnapshot next = (DataSnapshot) iterator.next();
-                    Double latitude = (Double) next.child("latitude").getValue();
-                    Double longitude = (Double) next.child("longitude").getValue();
-                    String name = (String) next.child("name").getValue();
-                    String address = (String) next.child("address").getValue();
-
-                    if(latitude!= null && longitude !=null) {
-                       if (name.toLowerCase(Locale.ROOT).contains(s.toLowerCase(Locale.ROOT))) {
-                            LatLng latLng = new LatLng(latitude, longitude);
-                            MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(name).snippet(address).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
-                            mMap.addMarker(markerOptions);
-                            vendorCount++;
-                        }
-                    }
-                }
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.d(TAG, databaseError.getMessage());
-                Toast.makeText(getActivity(), "Fail to get data.", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-    }
-
-    private void fetchVendors(String businessName) {
+        mMap.clear();
+        vendorModels.clear();
 
         if (!isNetworkConnected()) {
             showSnackBar("Check network connection.", true);
@@ -803,7 +975,51 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
         if (checkLocation()) {
-            Call<PlacesPOJO.Root> call = apiService.doPlaces("restaurant", latLngString, businessName, true, "distance", APIClient.GOOGLE_PLACE_API_KEY);
+
+            //fetch firebase vendors
+            databaseReference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                    //Iterate through all the child nodes of users
+                    Iterable<DataSnapshot> snapshotIterator = dataSnapshot.getChildren();
+                    Iterator<DataSnapshot> iterator = snapshotIterator.iterator();
+
+
+                    while (iterator.hasNext()) {
+                        DataSnapshot next = (DataSnapshot) iterator.next();
+                        Double latitude = (Double) next.child("latitude").getValue();
+                        Double longitude = (Double) next.child("longitude").getValue();
+                        String name = (String) next.child("name").getValue();
+                        String address = (String) next.child("address").getValue();
+                        //String rating = (String) next.child("rating").getValue();
+                        String rating = "0"; //TODO: Access ratings separately after narin is finished
+
+
+                        if(latitude!= null && longitude !=null) {
+                            //search both address and name for the each vendor
+                            if (name.toLowerCase(Locale.ROOT).contains(searchQuery.toLowerCase(Locale.ROOT)) || address.toLowerCase(Locale.ROOT).contains(searchQuery.toLowerCase(Locale.ROOT))) {
+                                LatLng latLng = new LatLng(latitude, longitude);
+                                MarkerOptions markerOptions = new MarkerOptions().position(latLng).title(name).snippet(address).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN));
+                                vendorMarker = mMap.addMarker(markerOptions);
+
+                                vendorModels.add(new VendorModel(name, address, String.valueOf(latitude), String.valueOf(longitude), rating, "Firebase"));
+
+                            }
+                        }
+                    }
+
+                }
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    Log.d(TAG, databaseError.getMessage());
+                    Toast.makeText(getActivity(), "Fail to get data.", Toast.LENGTH_SHORT).show();
+
+                }
+            });
+
+
+            Call<PlacesPOJO.Root> call = apiService.doPlaces("restaurant", latLngString, searchQuery, true, "distance", APIClient.GOOGLE_PLACE_API_KEY);
             call.enqueue(new Callback<PlacesPOJO.Root>() {
                 @Override
                 public void onResponse(Call<PlacesPOJO.Root> call, Response<PlacesPOJO.Root> response) {
@@ -820,7 +1036,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                             x.results = results;
 
 
-                            vendorModels = new ArrayList<>();
+                            //vendorModels = new ArrayList<>();
                             for (int i = 0; i < results.size(); i++) {
 
                                 //if (i == 10)
@@ -830,7 +1046,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                                 PlacesPOJO.CustomA info = results.get(i);
 
 
-                                vendorModels.add(new VendorModel(info.name, info.vicinity, info.distance, info.geometry.locationA.lat, info.geometry.locationA.lng, info.rating));
+                                vendorModels.add(new VendorModel(info.name, info.vicinity, info.geometry.locationA.lat, info.geometry.locationA.lng, info.rating, "GooglePlaces"));
 
                                 if (vendorModels.size() == 10 || vendorModels.size() == results.size()) {
 
@@ -838,12 +1054,16 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                             }
                             x.setStores(vendorModels);
                             int size = vendorModels.size();
-                            //showSnackBar("Found " + size + " vendors.", false);
-                            vendorCount = vendorCount + size;
+                            showSnackBar("Found " + size + " " + searchQuery + " vendors.", false);
                             addMarkers(vendorModels);
 
                         } else {
-                            //showSnackBar("No matches found near you.", true);
+                            showSnackBar("No matches found near you.", true);
+
+                            if(latLng!=null) {
+                                mMap.addMarker(new MarkerOptions().position(latLng).title("You are here!").icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+
+                            }
                         }
 
                     } else if (response.code() != 200) {
@@ -859,9 +1079,11 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
                 }
             });
 
+
         } else {
             showSnackBar("Enable Location and try again.", true);
         }
+
 
     }
 
@@ -887,4 +1109,7 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback, Google
 REFERENCES
 
 https://stackoverflow.com/questions/8049612/calculating-distance-between-two-geographic-locations/8050255#8050255
+ https://stackoverflow.com/questions/50950863/preventing-two-markers-for-current-location-in-google-maps
+ https://androidwave.com/fragment-communication-using-eventbus/
+ https://github.com/greenrobot/EventBus
  */
