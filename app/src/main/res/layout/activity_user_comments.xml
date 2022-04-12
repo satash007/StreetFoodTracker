@@ -5,51 +5,51 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".UserCommentsActivity">
-
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="?attr/actionBarTheme" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/comments_Recycler_View"
-        android:layout_below="@+id/toolbar"
-        android:layout_above="@+id/bottom"/>
+        android:paddingBottom="50dp"/>
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_margin="10dp">
+
+    </LinearLayout>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:id="@+id/bottom"
         android:background="#fff"
         android:padding="4dp"
         android:layout_alignParentBottom="true">
 
         <EditText
+            android:id="@+id/EditText_comment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Add a comment..."
-            android:id="@+id/add_comment"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             android:background="@android:color/transparent"
-            android:layout_toLeftOf="@+id/post"/>
+            android:layout_toLeftOf="@+id/post_comment_btn"
+            android:hint="Add a comment..." />
 
-        <TextView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/post"
+            android:id="@+id/post_comment_btn"
             android:text="POST"
             android:layout_marginEnd="5dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/myColorPrimary"/>
+            android:textColor="@color/white"/>
     </RelativeLayout>
-
 </RelativeLayout>

@@ -17,7 +17,7 @@ public class UserTest {
 
     @Test
     public void testGetUser(){
-        System.out.println("Testing getUID() method in the User class...");
+        System.out.println("Testing getID() method in the User class...");
         String expResult = "12345";
         String actualResult = user.getUID();
         assertEquals(expResult, actualResult);
@@ -85,7 +85,7 @@ public class UserTest {
     @Test
     public void testLatitude(){
         System.out.println("Testing getLatitude() method in the User class...");
-        double expResult = 668869.00;
+        double expResult = 669860.00;
         double actualResult = user.getLatitude();
         assertEquals(expResult, actualResult);
     }
