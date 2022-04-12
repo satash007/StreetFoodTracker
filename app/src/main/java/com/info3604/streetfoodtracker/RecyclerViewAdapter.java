@@ -54,7 +54,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         public void setData(PlacesPOJO.CustomA info, MyViewHolder holder, VendorModel vendorModel) {
             this.model = vendorModel;
-            holder.txtStoreDist.setText("Rating: " + model.rating);
+            holder.txtStoreDist.setText(info.distance + "\nRating: " + model.rating);
             holder.txtStoreName.setText(info.name);
             holder.txtStoreAddr.setText(info.vicinity);
 

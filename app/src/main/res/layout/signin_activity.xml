@@ -12,38 +12,34 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleLarge"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:endColor="@color/red_700"
-            android:startColor="@color/myColorPrimary"
-            android:visibility="gone"
-            tools:ignore="MissingConstraints" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
         android:padding="24dp">
 
-        <ImageView
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-            android:layout_gravity="center"
-            android:contentDescription="@string/image"
-            android:minWidth="0dp"
-            android:minHeight="0dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/logo_streetfoodtracker" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center"
+                android:contentDescription="@string/image"
+                android:minWidth="0dp"
+                android:minHeight="0dp"
+                android:scaleType="fitCenter"
+                app:srcCompat="@drawable/logo_streetfoodtracker" />
+
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:endColor="@color/red_700"
+                android:startColor="@color/myColorPrimary"
+                android:visibility="gone"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
 
 
         <Space
@@ -74,14 +70,31 @@
             android:textColorHint="@android:color/darker_gray" />
 
         <!-- Login Button -->
-        <Button
-            android:id="@+id/btnLogin"
-            android:layout_width="150dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:background="@drawable/button_shape"
-            android:text="@string/login"
-            android:textColor="@android:color/black" />
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_shape"
+                android:text="@string/login"
+                android:textColor="@android:color/black" />
+
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="wrap_content" />
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/sign_in_google"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+            </com.google.android.gms.common.SignInButton>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/sign_in_button"
@@ -98,18 +111,21 @@
             android:layout_width="match_parent"
             android:layout_height="30dp" />
 
-        <com.google.android.gms.common.SignInButton
-            android:paddingTop="10dp"
-            android:id="@+id/sign_in_google"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/btnContinueAsGuest"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dip"
+            android:background="@drawable/button_shape"
+            android:text="@string/continueAsGuest"
+            android:textColor="@android:color/black" />
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="@font/poppins_light"
-            android:paddingTop="30dp"
+            android:paddingTop="10dp"
             android:text="@string/version_code"
             android:textAlignment="center"
             android:textSize="10sp" />

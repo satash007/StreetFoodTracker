@@ -155,7 +155,6 @@ public class RegistrationActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-
                 Intent locationPickerIntent = new LocationPickerActivity.Builder()
                         .withLocation(10.536421, -61.311951)
                         .withGeolocApiKey(getResources().getString(R.string.google_api_key))
@@ -217,8 +216,6 @@ public class RegistrationActivity extends AppCompatActivity {
                 });
 
 
-
-
     }
 
     private void register(){
@@ -238,8 +235,6 @@ public class RegistrationActivity extends AppCompatActivity {
         rbAccountType = findViewById(selectedID);
 
         progressBar.setVisibility(View.VISIBLE);
-
-
 
 
         // Variables for validation of inputted data
@@ -304,6 +299,8 @@ public class RegistrationActivity extends AppCompatActivity {
         }
 
     }
+
+
 
 
 

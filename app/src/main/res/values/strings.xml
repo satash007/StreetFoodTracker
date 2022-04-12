@@ -31,7 +31,8 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_wrong_password">Password does not match email</string>
 
-    <string name="version_code">App Version: 2.0</string>
-
+    <string name="version_code">App Version: 3.1</string>
+    <string name="continueAsGuest">Continue as Guest</string>
+    <string name="base_url">https://maps.googleapis.com</string>
 
 </resources>

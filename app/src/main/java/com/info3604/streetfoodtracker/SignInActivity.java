@@ -1,5 +1,6 @@
 package com.info3604.streetfoodtracker;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,28 +28,38 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 public class SignInActivity extends AppCompatActivity {
     private static final String TAG = "";
     private EditText inputEmail, inputPassword;
+    private Button btnLogin, btnContinueAsGuest;
+    private TextView textRegister;
     private FirebaseAuth mAuth;
     private ProgressBar progressBar;
 
-    SignInButton button;
+    SignInButton btnSignInGoogle;
     private final static int RC_SIGN_IN = 123;
     GoogleSignInClient mGoogleSignInClient;
     FirebaseAuth.AuthStateListener mAuthListener;
+    boolean permissionGranted = false;
 
     @Override
     protected void onStart() {
         super.onStart();
         mAuth.addAuthStateListener(mAuthListener);
-
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.signin_activity);
+
         mAuth = FirebaseAuth.getInstance();
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -58,34 +69,39 @@ public class SignInActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                if (firebaseAuth.getCurrentUser() != null) {
-                    startActivity(new Intent(SignInActivity.this, MainActivity.class));
-                    finish();
-                }
-
+        mAuthListener = firebaseAuth -> {
+            if (firebaseAuth.getCurrentUser() != null) {
+                startActivity(new Intent(SignInActivity.this, MainActivity.class));
+                finish();
             }
-        };
 
-        setContentView(R.layout.signin_activity);
+        };
 
         inputEmail = (EditText) findViewById(R.id.email);
         inputPassword = (EditText) findViewById(R.id.password);
-        Button btnLogin = (Button) findViewById(R.id.btnLogin);
-        progressBar = (ProgressBar) findViewById(R.id.progressBar);
-        TextView btnSignIn = (TextView) findViewById(R.id.sign_in_button);
-        button = (SignInButton) findViewById(R.id.sign_in_google);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
+        btnContinueAsGuest = (Button) findViewById(R.id.btnContinueAsGuest);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        textRegister = (TextView) findViewById(R.id.sign_in_button);
+        btnSignInGoogle = (SignInButton) findViewById(R.id.sign_in_google);
+
+        permissionGranted = requestSinglePermission(); //request permission for map usage in MainActivity
+
+        btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(permissionGranted) {
+                    progressBar.setVisibility(View.VISIBLE);
                     signIn();
+                }else{
+                    progressBar.setVisibility(View.GONE);
+                    requestSinglePermission();
+                }
             }
         });
 
-        btnSignIn.setOnClickListener(new View.OnClickListener() {
+        textRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SignInActivity.this, RegistrationActivity.class));
@@ -97,64 +113,76 @@ public class SignInActivity extends AppCompatActivity {
         {
             @Override
             public void onClick(View v) {
+                if (permissionGranted) {
+                    inputEmail.setError(null);
+                    inputPassword.setError(null);
 
-                inputEmail.setError(null);
-                inputPassword.setError(null);
+                    // Variables for validation of inputted data
+                    boolean cancel = false;
+                    View focusView = null;
 
-                // Variables for validation of inputted data
-                boolean cancel = false;
-                View focusView = null;
+                    String email = inputEmail.getText().toString();
+                    String password = inputPassword.getText().toString();
 
-                String email = inputEmail.getText().toString();
-                String password = inputPassword.getText().toString();
+                    if (TextUtils.isEmpty(email)) {
+                        inputEmail.setError(getString(R.string.error_field_required));
+                        focusView = inputEmail;
+                        cancel = true;
+                    }
+                    if (TextUtils.isEmpty(password)) {
+                        inputPassword.setError(getString(R.string.error_field_required));
+                        focusView = inputPassword;
+                        cancel = true;
+                    }
 
-                if (TextUtils.isEmpty(email)) {
-                    inputEmail.setError(getString(R.string.error_field_required));
-                    focusView = inputEmail;
-                    cancel = true;
-                }
-                if (TextUtils.isEmpty(password)) {
-                    inputPassword.setError(getString(R.string.error_field_required));
-                    focusView = inputPassword;
-                    cancel = true;
-                }
+                    if (cancel) {
+                        // On error register process is not completed and focus returns to first area of error
+                        focusView.requestFocus();
 
-                if (cancel) {
-                    // On error register process is not completed and focus returns to first area of error
-                    focusView.requestFocus();
+                    } else {
 
+                        progressBar.setVisibility(View.VISIBLE);
+
+                        //authenticate user
+                        mAuth.signInWithEmailAndPassword(email, password)
+                                .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+
+                                        progressBar.setVisibility(View.GONE);
+
+                                        if (task.isSuccessful()) {
+                                            // there was an error
+                                            Log.d(TAG, "signInWithEmail:success");
+                                            Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                                            startActivity(intent);
+                                            finish();
+
+                                        } else {
+                                            Log.d(TAG, "singInWithEmail:Fail");
+                                            Toast.makeText(SignInActivity.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+
+                                });
+                    }
                 }else{
-
-                progressBar.setVisibility(View.VISIBLE);
-
-
-                //authenticate user
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(SignInActivity.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-
-                                progressBar.setVisibility(View.GONE);
-
-                                if (task.isSuccessful()) {
-                                    // there was an error
-                                    Log.d(TAG, "signInWithEmail:success");
-                                    Intent intent = new Intent(SignInActivity.this, MainActivity.class);
-                                    startActivity(intent);
-                                    finish();
-
-                                } else {
-                                    Log.d(TAG, "singInWithEmail:Fail");
-                                    Toast.makeText(SignInActivity.this, getString(R.string.failed), Toast.LENGTH_LONG).show();
-                                }
-                            }
-
-                        });
-            }
+                    requestSinglePermission();
+                }
             }
 
         });
 
+        btnContinueAsGuest.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SignInActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+
+        });
 
     }
 
@@ -219,4 +247,41 @@ public class SignInActivity extends AppCompatActivity {
                     }
                 });
     }
+
+   // TODO
+    private boolean requestSinglePermission() {
+
+        Dexter.withContext(this)
+                .withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+
+                        permissionGranted = true;
+                        btnSignInGoogle.setEnabled(true);
+                        btnLogin.setEnabled(true);
+
+                    }
+
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        // check for permanent denial of permission
+                        if (response.isPermanentlyDenied()) {
+                            permissionGranted = false;
+                            btnSignInGoogle.setEnabled(false);
+                            btnLogin.setEnabled(false);
+                        }
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                        token.continuePermissionRequest();
+                    }
+                }).check();
+
+        return permissionGranted;
+    }
+
+
+
 }

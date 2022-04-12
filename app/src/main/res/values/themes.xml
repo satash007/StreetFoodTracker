@@ -13,6 +13,7 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/mangage</item>
+
     </style>
 
     <style name="Theme.StreetFoodTracker.NoActionBar">
@@ -29,6 +30,9 @@
 
     <item name="colorPrimary">@color/myColorPrimary</item>
     <item name="colorPrimaryDark">@color/myColorPrimaryDark</item>
+        <item name="android:editTextColor">@color/black</item>
+        <item name="android:textColorHint">@color/black</item>
+
         <item name="colorAccent">@color/red_200</item>
         <item name="android:textColorPrimary">@color/red_700</item>
         <item name="android:textColorSecondary">@color/red_200</item>
