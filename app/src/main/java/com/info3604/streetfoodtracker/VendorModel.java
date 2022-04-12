@@ -2,17 +2,15 @@ package com.info3604.streetfoodtracker;
 
 public class VendorModel {
 
-    public String name, address, distance;
-    public String lat,lng;
-    String rating;
+    public String name, address, lat, lng, rating, type;
 
-    public VendorModel(String name, String address, String distance, String lat, String lng, String rating) {
+    public VendorModel(String name, String address,String lat, String lng, String rating, String type) {
         this.name = name;
         this.address = address;
         this.lat = lat;
         this.lng = lng;
         this.rating = rating;
-        this.distance = distance;
+        this.type = type;
     }
 
     @Override
@@ -23,7 +21,7 @@ public class VendorModel {
                 ", lat='" + lat + '\'' +
                 ", lng='" + lng + '\'' +
                 ", rating='" + rating + '\'' +
-                ", distance='" + distance + '\'' +
+                ", type='" + type + '\'' +
                 '}';
     }
 }
