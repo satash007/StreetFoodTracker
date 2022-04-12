@@ -29,6 +29,7 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -281,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+
     }
 
     @Override
@@ -293,15 +295,14 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        ViewPager mviewPager = (ViewPager) findViewById(R.id.viewpager);
 
+        ViewPager mviewPager = (ViewPager) findViewById(R.id.viewpager);
         int currentPagerPos = mviewPager.getCurrentItem();
 
-        if(currentPagerPos == 1 || currentPagerPos == 2) {
+        if (currentPagerPos == 1 || currentPagerPos == 2) {
             mviewPager.setCurrentItem(0);
             return;
         }
-
 
         super.onBackPressed();
     }
@@ -323,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
         RequestConfiguration configuration =
                 new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
         MobileAds.setRequestConfiguration(configuration);
-
 
         super.onStart();
     }

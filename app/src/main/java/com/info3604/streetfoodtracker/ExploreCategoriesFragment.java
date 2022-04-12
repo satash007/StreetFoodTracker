@@ -7,10 +7,17 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.RequestConfiguration;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.info3604.streetfoodtracker.model.FoodTypeFirebaseModel;
 import com.info3604.streetfoodtracker.model.LocationTypeFirebaseModel;
+
+import java.util.Arrays;
+import java.util.List;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,6 +30,7 @@ public class ExploreCategoriesFragment extends Fragment {
     private BrowseByFoodTypeListAdapter horizontalAdapter;
     private BrowseByLocationListAdapter verticalAdapter;
     DatabaseReference dbRef1, dbRef2;
+    private AdView mAdView;
 
     public ExploreCategoriesFragment() {
         // Required empty public constructor
@@ -46,9 +54,6 @@ public class ExploreCategoriesFragment extends Fragment {
 
         horizontalList = (RecyclerView) view.findViewById(R.id.horizontal_recycler);
         verticalList = (RecyclerView) view.findViewById(R.id.vertical_recycler);
-
-        // horizontalList.setHasFixedSize(true);
-        //verticalList.setHasFixedSize(true);
 
         // Create a instance of the database and get
         // its reference
@@ -87,6 +92,16 @@ public class ExploreCategoriesFragment extends Fragment {
         verticalAdapter = new BrowseByLocationListAdapter(optionsVert, getActivity());
         // Connecting Adapter class with the Recycler view*/
         verticalList.setAdapter(verticalAdapter);
+
+        mAdView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
+
+        List<String> testDeviceIds = Arrays.asList("0E9F3F151309F1E042345DACC334B7F9");
+        RequestConfiguration configuration =
+                new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
+        MobileAds.setRequestConfiguration(configuration);
+
 
         return view;
     }

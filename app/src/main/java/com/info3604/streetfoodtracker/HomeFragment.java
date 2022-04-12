@@ -17,7 +17,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-public class HomeFragment extends Fragment {
+public class HomeFragment extends Fragment{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
@@ -144,7 +144,6 @@ public class HomeFragment extends Fragment {
             return tabTitles[position];
         }
     }
-
 
 }
 
