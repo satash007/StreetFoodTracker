@@ -86,7 +86,8 @@ public class SignInActivity extends AppCompatActivity {
         textRegister = (TextView) findViewById(R.id.sign_in_button);
         btnSignInGoogle = (SignInButton) findViewById(R.id.sign_in_google);
 
-        permissionGranted = requestSinglePermission(); //request permission for map usage in MainActivity
+        //permissionGranted = requestSinglePermission(); //request permission for map usage in MainActivity
+        permissionGranted = true; //request permission for map usage in MainActivity
 
         btnSignInGoogle.setOnClickListener(new View.OnClickListener() {
             @Override

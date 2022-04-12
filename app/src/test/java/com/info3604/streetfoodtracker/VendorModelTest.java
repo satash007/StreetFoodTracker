@@ -16,7 +16,7 @@ public class VendorModelTest {
 
     @Before
     public void intialize(){
-        vendorT = new VendorModel( "Nigel", "Penal",  "346782","-456723.00","3.0");
+        vendorT = new VendorModel( "Nigel", "Penal",  "346782","-456723.00","3.0", "Firebase");
     }
 
 

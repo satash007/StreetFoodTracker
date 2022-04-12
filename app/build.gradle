@@ -11,11 +11,12 @@ android {
         //minSdk 16
         minSdk 19
         targetSdk 31
-        versionCode 7
-        versionName "3.1"
+        versionCode 11
+        versionName "3.5"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+
 
     buildTypes {
         release {
@@ -44,10 +45,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-auth:20.1.0'
     implementation 'com.google.firebase:firebase-database:20.0.4'
     implementation 'androidx.navigation:navigation-ui:2.4.1'
+    implementation 'com.google.android.gms:play-services-ads-lite:20.6.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    //needed for AppOpen Ads
+    def lifecycle_version = '2.3.1'
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycle_version"
+    implementation "androidx.lifecycle:lifecycle-runtime:$lifecycle_version"
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
 
     //fixes multidex issue
     implementation 'com.android.support:multidex:1.0.3'
@@ -81,7 +88,17 @@ dependencies {
 
     implementation 'com.adevinta.android:leku:9.1.2'
 
+    //needed for animations
     //implementation 'com.daimajia.androidanimations:library:2.4@aar'
+
+    //Library for app tutorial on first run
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+
+    // Dependency FirebaseUI for Firebase Realtime Database
+    implementation 'com.firebaseui:firebase-ui-database:6.2.1'
+
+    // Library for passing messages between fragments/activities
+    implementation 'org.greenrobot:eventbus:3.1.1'
 
 
 }

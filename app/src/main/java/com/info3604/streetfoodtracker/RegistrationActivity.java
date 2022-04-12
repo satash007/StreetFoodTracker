@@ -157,7 +157,7 @@ public class RegistrationActivity extends AppCompatActivity {
 
                 Intent locationPickerIntent = new LocationPickerActivity.Builder()
                         .withLocation(10.536421, -61.311951)
-                        .withGeolocApiKey(getResources().getString(R.string.google_api_key))
+                        .withGeolocApiKey(getResources().getString(R.string.google_maps_key))
                         .withSearchZone("en-EN")
                         .withDefaultLocaleSearchZone()
                         .shouldReturnOkOnBackPressed()

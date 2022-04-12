@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context=".fragments.home.HomeFragment">
+    tools:context=".VendorMapFragment">
 
     <fragment
         android:id="@+id/map"
@@ -22,9 +22,24 @@
         android:layout_gravity="bottom"
         android:layout_marginStart="@dimen/fab_margin"
         android:layout_marginLeft="@dimen/fab_margin"
-        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
         app:srcCompat="@drawable/ic_current_location"
         />
+
+
+    <com.google.android.gms.ads.AdView
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|center"
+
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/adUnitId">
+    </com.google.android.gms.ads.AdView>
+
 
     <RelativeLayout
         android:id="@+id/searchLayout"
@@ -37,31 +52,38 @@
         android:layout_marginRight="20dp"
         android:layout_marginTop="20dp">
 
-        <Button
-            android:id="@+id/btnSearch"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="59dp"
-            android:layout_marginRight="59dp"
-            android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/ic_search"/>
+            android:layout_height="50dp"
+            android:layout_alignLeft="@id/btnSearch"
+            android:layout_marginStart="-40dp"
+            android:endColor="@color/red_700"
+            android:paddingRight="20dp"
+            android:startColor="@color/myColorPrimary"
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/btnViewVendors"
-            android:layout_width="50dp"
+            android:id="@+id/btnSearch"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:drawableLeft="@drawable/ic_list_vendors"
-            android:paddingRight="20dp" />
+            android:drawableLeft="@drawable/ic_search"
+            android:text="@string/leku_search_hint"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small"
+            android:textColor="@color/black" />
+
 
         <EditText
             android:id="@+id/editText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:hint="Search for a vendor..."
+            android:fontFamily="@font/poppins_medium"
+            android:hint="Enter a vendor or a food type"
             android:minHeight="48dp"
-            android:text="Doubles"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/black" />
 

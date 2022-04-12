@@ -31,8 +31,10 @@
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_wrong_password">Password does not match email</string>
 
-    <string name="version_code">App Version: 3.1</string>
+    <string name="version_code">App Version: 3.5</string>
     <string name="continueAsGuest">Continue as Guest</string>
     <string name="base_url">https://maps.googleapis.com</string>
-
+    <string name="adUnitId">ca-app-pub-1864853141969747/4227052831</string>
+    <string name="adsAppId">ca-app-pub-1864853141969747~7998228142</string>
+    <string name="adsAppOpen">ca-app-pub-1864853141969747/1775067740</string>
 </resources>

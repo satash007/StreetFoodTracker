@@ -18,6 +18,7 @@ public class GalleryFragment extends Fragment {
 
     private GalleryViewModel galleryViewModel;
     private FragmentGalleryBinding binding;
+    private View root;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,6 +35,9 @@ public class GalleryFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+
+
         return root;
     }
 

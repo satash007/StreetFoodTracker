@@ -13,6 +13,7 @@
 
     <color name="myColorPrimary">#fdd835</color>
     <color name="myColorPrimaryDark">#c6a700</color>
-    <color name="myColorPrimaryLight">#ffff6b</color>
+    <color name="myColorPrimaryLight">#ffe743</color>
+
 
 </resources>
