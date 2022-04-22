@@ -14,19 +14,19 @@
 # Features 
 
 1. Search, Discover, and View vendor profiles
-	- Allows users to search, discover and view all street food vendors in there vicinity or throughout Trinidad and Tobago.
+	- Allows users to search, discover and view all street food vendors in their vicinity or throughout Trinidad and Tobago. 
 2. Render search results
-	- Allow users to search for a food type or a vendor and the results will be displayed via a map view or a list view.
+	- Allow users to search for a food type or a vendor and the results will be displayed via a map view or a list view. 
 3. Track current location
-	- Allow the application to track the users current location once they have granted the application permission to there location.
+	- Allow the application to track the user's current location once they have granted the application permission to their location. 
 4. Categorize vendors
-	- Allows the users to browser by a particular food type or by a specific location which will be displayed via the map view. 
+	- Allows the users to browse by a particular food type or by a specific location which will be displayed via the map view. 
 5. Vendor tracking
-	- Allows the user to track and view the path the user needs to travel from there current position to the vendor they selected.
+	- Allows the user to track and view the path the user needs to travel from their current position to the vendor they selected. 
 6. Vendor Sorting
-	- Alows user to Sort the vendor rankings based on the distance away from the user or by the ratings.
+	- Allows user to Sort the vendor rankings based on the distance away from the user or by the ratings. 
 7. Guided Directions
-	- Provides users with the direction from there current position to the vendor of there choosing.
+	- Provides users with directions from their current position to the vendor of their choosing. 
 8. User Reviews 
 	- Allows users to provide a review on any vendor.
 9. Offline Browsing 
