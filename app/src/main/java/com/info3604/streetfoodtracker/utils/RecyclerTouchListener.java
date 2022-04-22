@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.utils;
 
 import android.content.Context;
 import android.view.GestureDetector;
