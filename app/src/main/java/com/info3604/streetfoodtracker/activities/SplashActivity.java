@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;

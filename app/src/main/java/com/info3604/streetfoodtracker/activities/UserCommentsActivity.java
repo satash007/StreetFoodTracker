@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.info3604.streetfoodtracker.R;
+import com.info3604.streetfoodtracker.adapter.CommentsAdapter;
 import com.info3604.streetfoodtracker.model.maproutes.Comment;
 
 import java.text.SimpleDateFormat;
@@ -143,7 +145,7 @@ public class UserCommentsActivity extends AppCompatActivity {
                 new FirebaseRecyclerOptions.Builder<Comment>()
                 .setQuery(vendor_ref,Comment.class)
                 .build();
-        FirebaseRecyclerAdapter<Comment,CommentsAdapter> firebaseRecyclerAdapter =
+        FirebaseRecyclerAdapter<Comment, CommentsAdapter> firebaseRecyclerAdapter =
                 new FirebaseRecyclerAdapter<Comment, CommentsAdapter>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull CommentsAdapter holder, int position, @NonNull Comment model) {

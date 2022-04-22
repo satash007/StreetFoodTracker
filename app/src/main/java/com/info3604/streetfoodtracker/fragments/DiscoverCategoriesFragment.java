@@ -1,10 +1,11 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.ads.AdRequest;
@@ -13,6 +14,10 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.RequestConfiguration;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.info3604.streetfoodtracker.R;
+import com.info3604.streetfoodtracker.utils.WrapContentLinearLayoutManager;
+import com.info3604.streetfoodtracker.adapter.BrowseByFoodTypeListAdapter;
+import com.info3604.streetfoodtracker.adapter.BrowseByLocationListAdapter;
 import com.info3604.streetfoodtracker.model.FoodTypeFirebaseModel;
 import com.info3604.streetfoodtracker.model.LocationTypeFirebaseModel;
 
@@ -23,7 +28,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class ExploreCategoriesFragment extends Fragment {
+public class DiscoverCategoriesFragment extends Fragment {
 
     private RecyclerView horizontalList;
     private RecyclerView verticalList;
@@ -31,14 +36,15 @@ public class ExploreCategoriesFragment extends Fragment {
     private BrowseByLocationListAdapter verticalAdapter;
     DatabaseReference dbRef1, dbRef2;
     private AdView mAdView;
+    private LinearLayout progressBarLayout, linLayout;
 
-    public ExploreCategoriesFragment() {
+    public DiscoverCategoriesFragment() {
         // Required empty public constructor
     }
 
 
-    public static ExploreCategoriesFragment newInstance() {
-        ExploreCategoriesFragment fragment = new ExploreCategoriesFragment();
+    public static DiscoverCategoriesFragment newInstance() {
+        DiscoverCategoriesFragment fragment = new DiscoverCategoriesFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -54,6 +60,8 @@ public class ExploreCategoriesFragment extends Fragment {
 
         horizontalList = (RecyclerView) view.findViewById(R.id.horizontal_recycler);
         verticalList = (RecyclerView) view.findViewById(R.id.vertical_recycler);
+        progressBarLayout = (LinearLayout) view.findViewById(R.id.progressBarLayout);
+        linLayout = (LinearLayout) view.findViewById(R.id.contentLayout);
 
         // Create a instance of the database and get
         // its reference
@@ -62,7 +70,7 @@ public class ExploreCategoriesFragment extends Fragment {
 
         // To display the Recycler view linearly
         horizontalList.setLayoutManager(
-                new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false));
+                new WrapContentLinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL, false));
 
         // It is a class provide by the FirebaseUI to make a
         // query in the database to fetch appropriate data
@@ -76,10 +84,37 @@ public class ExploreCategoriesFragment extends Fragment {
         // Connecting Adapter class with the Recycler view*/
         horizontalList.setAdapter(horizontalAdapter);
 
+        horizontalAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                showLayout();
+            }
+
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                showLayout();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                showLayout();
+            }
+
+            void showLayout() {
+                progressBarLayout.setVisibility(View.GONE);
+                linLayout.setVisibility(View.VISIBLE);
+
+            }
+        });
+
 
         // To display the Recycler view linearly
         verticalList.setLayoutManager(
-                new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false));
+                new WrapContentLinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false));
 
         // It is a class provide by the FirebaseUI to make a
         // query in the database to fetch appropriate data

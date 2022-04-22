@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.activities;
 
 import android.Manifest;
 import android.content.Intent;
@@ -28,6 +28,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.info3604.streetfoodtracker.R;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;

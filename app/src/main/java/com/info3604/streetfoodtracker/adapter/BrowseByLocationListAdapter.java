@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.adapter;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.model.LocationTypeFirebaseModel;
 import com.squareup.picasso.Picasso;
 
@@ -47,7 +48,7 @@ public class BrowseByLocationListAdapter extends FirebaseRecyclerAdapter<Locatio
             @Override
             public void onClick(View v) {
 
-                EventBus.getDefault().post(locationTypeModel.getLocationName());
+                EventBus.getDefault().post(locationTypeModel.getLocationName() + "%location");
 
                 ViewPager mviewPager = (ViewPager) activity.findViewById(R.id.viewpager);
 

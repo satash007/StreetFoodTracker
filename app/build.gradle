@@ -1,6 +1,8 @@
 plugins {
     id 'com.android.application'
     id 'com.google.gms.google-services'
+    id 'com.onesignal.androidsdk.onesignal-gradle-plugin'
+
 }
 
 android {
@@ -11,8 +13,8 @@ android {
         //minSdk 16
         minSdk 19
         targetSdk 31
-        versionCode 11
-        versionName "3.5"
+        versionCode 17
+        versionName "4.1"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -63,10 +65,6 @@ dependencies {
     //added Picasso for image handling
     implementation 'com.squareup.picasso:picasso:2.71828'
 
-    /*Legacy Maps SDK*/
-    //implementation 'com.google.android.gms:play-services-maps:16.1.0'
-    //implementation 'com.google.android.gms:play-s
-    // ervices-location:15.0.1'
 
     /*New Maps SDK that features improved renderer*/
     implementation 'com.google.android.gms:play-services-maps:18.0.2'
@@ -100,6 +98,13 @@ dependencies {
 
     // Library for passing messages between fragments/activities
     implementation 'org.greenrobot:eventbus:3.1.1'
+
+    //OneSignal SDK
+    implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
+
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
+
 
 
 }

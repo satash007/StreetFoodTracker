@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.adapter;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -14,6 +14,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.imagehandling.CircleTransform;
 import com.info3604.streetfoodtracker.model.FoodTypeFirebaseModel;
 import com.squareup.picasso.Picasso;
@@ -54,7 +55,8 @@ public class BrowseByFoodTypeListAdapter extends FirebaseRecyclerAdapter<FoodTyp
             @Override
             public void onClick(View v) {
 
-                EventBus.getDefault().post(foodTypeModel.getFoodName());
+                EventBus.getDefault().post(foodTypeModel.getFoodName() + "%food");
+
 
                 ViewPager mviewPager = (ViewPager) activity.findViewById(R.id.viewpager);
 

@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.fragments;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.material.tabs.TabLayout;
+import com.info3604.streetfoodtracker.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ public class HomeFragment extends Fragment{
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
-    private String[] tabTitles = new String[]{"Explore", "Map View", "List View"};
+    private String[] tabTitles = new String[]{"Discover", "Map", "Rankings"};
 
     private int[] tabIcons = {
             R.drawable.ic_food,
@@ -101,9 +102,9 @@ public class HomeFragment extends Fragment{
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getChildFragmentManager());
-        adapter.addFrag(new ExploreCategoriesFragment(), "Explore");
-        adapter.addFrag(new VendorMapFragment(), "Map View");
-        adapter.addFrag(new VendorListFragment(), "List View");
+        adapter.addFrag(new DiscoverCategoriesFragment(), "Discover");
+        adapter.addFrag(new VendorMapFragment(), "Map");
+        adapter.addFrag(new VendorListFragment(), "Rankings");
 
         viewPager.setAdapter(adapter);
 

@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.FirebaseDatabase;
+import com.info3604.streetfoodtracker.R;
 
 public class DisplayVendorProfileActivity extends AppCompatActivity {
 
@@ -23,6 +24,7 @@ public class DisplayVendorProfileActivity extends AppCompatActivity {
     //FirebaseUser user;
     String vendorId, currentUserId ="";
     String vendorName, vendorLoc, vendorRat;
+
 
 
     @Override
@@ -67,7 +69,8 @@ public class DisplayVendorProfileActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-       // TODO: MainActivity OnBackPressed conflict with viewpager
+
+
     }
 
 }

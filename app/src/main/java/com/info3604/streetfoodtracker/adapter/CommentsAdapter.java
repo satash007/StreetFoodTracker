@@ -1,8 +1,10 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.adapter;
 
 import android.app.Application;
 import android.view.View;
 import android.widget.TextView;
+
+import com.info3604.streetfoodtracker.R;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;

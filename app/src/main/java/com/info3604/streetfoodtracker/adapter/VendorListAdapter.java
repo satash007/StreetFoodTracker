@@ -1,4 +1,4 @@
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.adapter;
 
 import android.app.Activity;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetSequence;
+import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.model.VendorModel;
 
 import java.util.List;
@@ -32,7 +33,7 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.My
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.store_list_row, parent, false);
+                .inflate(R.layout.vendor_list_row, parent, false);
 
 
         return new MyViewHolder(view);
@@ -54,14 +55,15 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.My
         TextView txtVendorName;
         TextView txtVendorAddr;
         TextView txtVendorType;
+        TextView txtVendorDistance;
         RatingBar rbVendorRat;
         VendorModel model;
 
         public MyViewHolder(View itemView) {
             super(itemView);
-            //this.txtStoreDist = (TextView) itemView.findViewById(R.id.txtStoreDist);
-            this.txtVendorName = (TextView) itemView.findViewById(R.id.txtStoreName);
-            this.txtVendorAddr = (TextView) itemView.findViewById(R.id.txtStoreAddr);
+            this.txtVendorDistance = (TextView) itemView.findViewById(R.id.txtVendorDistance);
+            this.txtVendorName = (TextView) itemView.findViewById(R.id.txtVendorName);
+            this.txtVendorAddr = (TextView) itemView.findViewById(R.id.txtVendorAddr);
             this.rbVendorRat = (RatingBar) itemView.findViewById(R.id.current_rating);
             this.txtVendorType = (TextView) itemView.findViewById(R.id.txtVendorType);
 
@@ -76,9 +78,10 @@ public class VendorListAdapter extends RecyclerView.Adapter<VendorListAdapter.My
 
         public void setData(MyViewHolder holder, VendorModel vendorModel) {
             this.model = vendorModel;
-            //holder.txtStoreDist.setText("Rating: " + model.rating);
+
             holder.txtVendorName.setText(model.name);
             holder.txtVendorAddr.setText(model.address);
+            holder.txtVendorDistance.setText(model.distance + "km away");
             holder.rbVendorRat.setRating(Float.parseFloat(model.rating));
             holder.txtVendorType.setText("Source: " + model.type);
 

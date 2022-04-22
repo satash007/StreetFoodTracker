@@ -1,6 +1,6 @@
 
 
-package com.info3604.streetfoodtracker;
+package com.info3604.streetfoodtracker.activities;
 
 
 import android.Manifest;
@@ -29,7 +29,6 @@ import com.google.android.material.navigation.NavigationView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.GravityCompat;
-import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -37,7 +36,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
-import androidx.viewpager.widget.ViewPager;
 
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -46,8 +44,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.info3604.streetfoodtracker.imagehandling.CircleTransform;
+import com.info3604.streetfoodtracker.R;
 import com.info3604.streetfoodtracker.databinding.ActivityMainBinding;
+import com.info3604.streetfoodtracker.imagehandling.CircleTransform;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
@@ -296,13 +295,14 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        ViewPager mviewPager = (ViewPager) findViewById(R.id.viewpager);
-        int currentPagerPos = mviewPager.getCurrentItem();
+       /*     ViewPager mviewPager = (ViewPager) findViewById(R.id.viewpager);
+            int currentPagerPos = mviewPager.getCurrentItem();
 
-        if (currentPagerPos == 1 || currentPagerPos == 2) {
-            mviewPager.setCurrentItem(0);
-            return;
-        }
+            if (currentPagerPos == 1 || currentPagerPos == 2) {
+                mviewPager.setCurrentItem(0);
+                return;
+            }*/
+
 
         super.onBackPressed();
     }
@@ -320,10 +320,12 @@ public class MainActivity extends AppCompatActivity {
         AdRequest adRequest = new AdRequest.Builder().build();
         mAdView.loadAd(adRequest);
 
-        List<String> testDeviceIds = Arrays.asList("0E9F3F151309F1E042345DACC334B7F9");
+        List<String> testDeviceIds = Arrays.asList(AdRequest.DEVICE_ID_EMULATOR);
+
         RequestConfiguration configuration =
                 new RequestConfiguration.Builder().setTestDeviceIds(testDeviceIds).build();
         MobileAds.setRequestConfiguration(configuration);
+
 
         super.onStart();
     }
