@@ -33,23 +33,40 @@
                 android:scaleX="2"
                 android:scaleY="2"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtStoreAddr" />
+                app:layout_constraintTop_toBottomOf="@+id/txtVendorDistance" />
 
             <TextView
-                android:id="@+id/txtStoreAddr"
+                android:id="@+id/txtVendorDistance"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/leku_soft_grey"
+                android:fontFamily="@font/poppins_medium"
+                android:gravity="left"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black"
+                android:textStyle="italic"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                app:layout_constraintBottom_toTopOf="@+id/current_rating"
+                app:layout_constraintTop_toBottomOf="@+id/txtVendorAddr"
+                app:layout_constraintStart_toStartOf="parent"
+                />
+
+            <TextView
+                android:id="@+id/txtVendorAddr"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@+id/current_rating"
+                app:layout_constraintBottom_toTopOf="@+id/txtVendorDistance"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtStoreName" />
+                app:layout_constraintTop_toBottomOf="@+id/txtVendorName" />
 
             <TextView
-                android:id="@+id/txtStoreName"
+                android:id="@+id/txtVendorName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -57,7 +74,7 @@
                 android:layout_marginEnd="16dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:textColor="@color/black"
-                app:layout_constraintBottom_toTopOf="@+id/txtStoreAddr"
+                app:layout_constraintBottom_toTopOf="@+id/txtVendorAddr"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -78,24 +95,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_chainStyle="packed" />
-
-            <!--
-            <TextView
-                android:id="@+id/txtStoreDist"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:lineSpacingExtra="8dp"
-                android:paddingBottom="10dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:textColor="@color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtStoreAddr"/>
-              -->
-            <!-- The current star rating of the vendor -->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

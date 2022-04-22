@@ -1,11 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VendorListFragment">
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoScrollableView="@+id/list"
+    tools:ignore="HardcodedText"
+    tools:context=".fragments.VendorListFragment">
 
-    <com.google.android.gms.ads.AdView
+    <FrameLayout
+
+        android:orientation="vertical"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        tools:context=".fragments.VendorMapFragment">
+
+        <LinearLayout
+            android:id="@+id/search_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/search_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_light"
+                android:gravity="center"
+                android:text="Showing search results for"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/sortByLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/rankedBy_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_light"
+                android:gravity="center"
+                android:paddingRight="20dp"
+                android:text="Sort by"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <RadioGroup
+                android:id="@+id/radioGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkedButton="@id/rbRating"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbRating"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Rating" />
+
+                <RadioButton
+                    android:id="@+id/rbDistance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Distance" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="50dp"
+            android:clipToPadding="false"
+            android:scrollbars="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        <LinearLayout
+            android:id="@+id/empty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/empty_view_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center"
+                android:text="No Results"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
+
+            <TextView
+                android:id="@+id/empty_view_sub"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_light"
+                android:gravity="center"
+                android:text="Please search for a vendor\nor food type on the Map View."
+                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+        </LinearLayout>
+
+        <com.google.android.gms.ads.AdView
         xmlns:ads="http://schemas.android.com/apk/res-auto"
         android:id="@+id/adView"
         android:layout_width="wrap_content"
@@ -19,54 +134,257 @@
     </com.google.android.gms.ads.AdView>
 
 
-    <LinearLayout
-        android:id="@+id/empty_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/empty_view_title"
-            android:layout_width="wrap_content"
+        <!--  <TextView
+            android:id="@+id/search_bar_txt"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/poppins_semibold"
-            android:gravity="center"
-            android:text="No Results"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1" />
-
-        <TextView
-            android:id="@+id/empty_view_sub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:fontFamily="@font/poppins_light"
             android:gravity="center"
-            android:text="Please search for a vendor\nor food type on the Map View."
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-             />
-    </LinearLayout>
+            android:text="Search results for: "
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />-->
 
-  <!--  <TextView
-        android:id="@+id/search_bar_txt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:fontFamily="@font/poppins_light"
-        android:gravity="center"
-        android:text="Search results for: "
-        android:layout_weight="1"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small" />-->
+    </FrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/recyclerView"
+    <ScrollView
+        android:id="@+id/dragView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="40dp"
-        android:clipToPadding="false"
-        android:scrollbars="vertical"
+        android:background="#ffffff"
+        android:clickable="true"
+        android:focusable="false"
+        android:orientation="vertical">
 
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-</RelativeLayout>
+            <Button
+                android:id="@+id/closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+                android:text="Close"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Name:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Name"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Address:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Address"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Distance:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Distance Away"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Latitude:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_lat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Latitude"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Longitude:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_lng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Longitude"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Current Rating:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <RatingBar
+                    android:id="@+id/vendor_rating"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="55dp"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="8dp"
+                    android:paddingBottom="10dp"
+                    android:scaleX="2"
+                    android:scaleY="2" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Source:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_source"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Source"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/add_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+
+                android:text="Add Review"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:drawableLeft="@android:drawable/btn_star_big_on" />
+        </LinearLayout>
+
+    </ScrollView>
+
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

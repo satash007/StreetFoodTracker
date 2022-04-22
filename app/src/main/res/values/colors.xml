@@ -16,4 +16,8 @@
     <color name="myColorPrimaryLight">#ffe743</color>
 
 
+    <color name="hue_green">#37e835</color>
+    <color name="hue_cyan">#38ebf0</color>
+    <color name="hue_red">#e74530</color>
+
 </resources>

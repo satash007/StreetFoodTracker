@@ -35,4 +35,6 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     </LinearLayout>
+
+
 </androidx.cardview.widget.CardView>

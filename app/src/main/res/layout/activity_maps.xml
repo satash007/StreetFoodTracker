@@ -1,11 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.sothree.slidinguppanel.SlidingUpPanelLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sliding_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="bottom"
+    sothree:umanoPanelHeight="68dp"
+    sothree:umanoShadowHeight="4dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="true"
+    sothree:umanoScrollableView="@+id/list"
+    tools:ignore="HardcodedText">
+
+<FrameLayout
+
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    tools:context=".VendorMapFragment">
+    tools:context=".fragments.VendorMapFragment">
 
     <fragment
         android:id="@+id/map"
@@ -15,7 +31,7 @@
         >
     </fragment>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+  <!--  <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,7 +40,103 @@
         android:layout_marginLeft="@dimen/fab_margin"
         android:layout_marginBottom="@dimen/fab_margin_bottom"
         app:srcCompat="@drawable/ic_current_location"
-        />
+        />-->
+
+    <!--This will be the parent Floating Action Button-->
+    <!--After the implementation the Floating Action Button at
+         the bottom right corner as we have constrained accordingly-->
+    <!--After clicking the above button the
+        following two buttons will pop up.
+         So this button is considered as parent FAB-->
+    <!--After opening the application it looks like regular
+        FAB but after user clicks it, it extends-->
+    <!--This functionality has been handled in the MainActivity.java-->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/action_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginBottom="@dimen/fab_margin_bottom"
+        android:backgroundTint="@color/red_200"
+        android:text="Cancel"
+        app:icon="@drawable/ic_view_list_white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--Floating action button for add alarm-->
+    <!--Make sure that you are constraining this
+        button to the parent button-->
+    <!--Make sure to add backgroundTint attribute to match
+         the entire application color-->
+    <!--because after changing the base application theme the color
+         of the FAB is set Blue as default-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/view_map_legend_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginBottom="200dp"
+        app:backgroundTint="@color/leku_strong_grey"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/action_fab"
+        app:layout_constraintEnd_toEndOf="@+id/action_fab"
+        app:srcCompat="@drawable/ic_map_white" />
+
+    <!--Action name text for the add alarm button-->
+    <!--Make sure that you are constraining this
+        Text to the add Alarm FAB button-->
+    <TextView
+        android:id="@+id/view_map_legend_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="90dp"
+        android:background="@color/myColorPrimaryLight"
+        android:layout_marginBottom="220dp"
+        android:text="View Map Legend"
+        app:layout_constraintBottom_toBottomOf="@+id/view_map_legend_fab"
+        app:layout_constraintEnd_toStartOf="@+id/view_map_legend_fab"
+        app:layout_constraintTop_toTopOf="@+id/view_map_legend_fab" />
+
+    <!--Floating action button for add person-->
+    <!--Make sure that you are constraining this button
+        to the add Alarm FAB button-->
+    <!--Make sure to add backgroundTint attribute to match
+         the entire application color-->
+    <!--because after changing the base application theme
+         the color of the FAB is set Blue as default-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/go_to_my_location_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="@dimen/fab_margin"
+        android:layout_marginLeft="@dimen/fab_margin"
+        android:layout_marginBottom="140dp"
+        app:backgroundTint="@color/leku_strong_grey"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/view_map_legend_fab"
+        app:layout_constraintEnd_toEndOf="@+id/view_map_legend_fab"
+        app:layout_constraintStart_toStartOf="@+id/view_map_legend_fab"
+        app:srcCompat="@drawable/ic_current_location" />
+
+    <TextView
+        android:id="@+id/go_to_my_location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginLeft="90dp"
+        android:background="@color/myColorPrimaryLight"
+
+        android:layout_marginBottom="160dp"
+        android:text="Go to my location"
+        app:layout_constraintBottom_toBottomOf="@+id/go_to_my_location_fab"
+        app:layout_constraintEnd_toStartOf="@+id/go_to_my_location_fab"
+        app:layout_constraintTop_toTopOf="@+id/go_to_my_location_fab" />
 
 
     <com.google.android.gms.ads.AdView
@@ -76,7 +188,7 @@
 
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/editTextSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -91,3 +203,238 @@
     </RelativeLayout>
 
 </FrameLayout>
+
+    <!-- SLIDING LAYOUT -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:focusable="false"
+        android:id="@+id/dragView">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/closeBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="20dp"
+                android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
+                android:text="Close"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/black" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Name:"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+            <TextView
+                android:id="@+id/vendor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/poppins_semibold"
+                android:gravity="center_vertical"
+                android:text="Vendor Name"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Address:"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/vendor_address"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Address"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Distance:"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/vendor_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Distance Away"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Latitude:"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/vendor_lat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Latitude"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Longitude:"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/vendor_lng"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Longitude"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Current Rating:"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+
+                <RatingBar
+                    android:id="@+id/current_rating"
+                    style="?android:attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="55dp"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="8dp"
+                    android:paddingBottom="10dp"
+                    android:scaleX="2"
+                    android:scaleY="2"
+                    />
+                </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_light"
+                    android:gravity="center_vertical"
+                    android:text="Source:"
+                    android:layout_weight="1"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:textColor="@color/black" />
+                <TextView
+                    android:id="@+id/vendor_source"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/poppins_semibold"
+                    android:gravity="center_vertical"
+                    android:text="Vendor Source"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/black" />
+
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/add_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="20dp"
+                android:text="Add Review"
+                android:layout_gravity="center_horizontal"
+                android:textColor="@color/black"
+                android:drawableLeft="@android:drawable/btn_star_big_on" />
+
+        </LinearLayout>
+
+
+    </ScrollView>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -7,13 +7,13 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.info3604.streetfoodtracker.HomeFragment"
+        android:name="com.info3604.streetfoodtracker.fragments.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="com.info3604.streetfoodtracker.ExploreCategoriesFragment"
+        android:name="com.info3604.streetfoodtracker.fragments.DiscoverCategoriesFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/activity_home_list"
         />

@@ -13,6 +13,8 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
         <item name="android:fontFamily">@font/mangage</item>
+        <item name="android:windowActionBarOverlay">true</item>
+
 
     </style>
 
@@ -52,4 +54,5 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat.Small</item>
 
     </style>
+
 </resources>
