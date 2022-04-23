@@ -49,7 +49,7 @@ public class UserTest {
     public void testPassword(){
         System.out.println("Testing getPassword() method in the User class...");
         String expResult = "password";
-        String actualResult = user.getEmail();
+        String actualResult = user.getPassword();
         assertEquals(expResult, actualResult);
     }
 
@@ -87,9 +87,9 @@ public class UserTest {
     @Test
     public void testLatitude(){
         System.out.println("Testing getLatitude() method in the User class...");
-        double expResult = 669860.00;
+        double expResult = 668869.00;
         double actualResult = user.getLatitude();
-        assertEquals(expResult, actualResult);
+        assertEquals(expResult, actualResult, 0);
     }
 
 
@@ -98,7 +98,7 @@ public class UserTest {
         System.out.println("Testing getLongitude() method in the User class...");
         double expResult = -394993.00;
         double actualResult = user.getLongitude();
-        assertEquals(expResult, actualResult);
+        assertEquals(expResult, actualResult, 0);
     }
 
 

@@ -85,13 +85,19 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.2.1'
 
-    implementation 'com.adevinta.android:leku:9.1.2'
+
 
     //needed for animations
     //implementation 'com.daimajia.androidanimations:library:2.4@aar'
 
     //Library for app tutorial on first run
     implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+
+    //For location picker activity
+    implementation 'com.adevinta.android:leku:9.1.2'
+
+    //Allows for the integration of a sliding panel in the app
+    implementation 'com.sothree.slidinguppanel:library:3.4.0'
 
     // Dependency FirebaseUI for Firebase Realtime Database
     implementation 'com.firebaseui:firebase-ui-database:6.2.1'
@@ -102,7 +108,7 @@ dependencies {
     //OneSignal SDK
     implementation 'com.onesignal:OneSignal:[4.0.0, 4.99.99]'
 
-    implementation 'com.sothree.slidinguppanel:library:3.4.0'
+
 
 
 
