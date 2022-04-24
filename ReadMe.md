@@ -8,6 +8,9 @@
   ## Trello Board 
    - https://trello.com/b/o9QE3XEP/info3604-project-streetfoodtracker
 
+  ## Test Specification 
+   - https://docs.google.com/document/d/1eAuPA12P0rJtJpxUmQhjQIAFKE7UAVK9ig4G-o7_Pug/edit?usp=sharing 
+
 # Project Description
   - Spartan Tech Solution developed a Mobile Application called StreetFoodTrack that allow users to discover, track and review the various types of street food       and their vendors throughout Trinidad and Tobago.
 
